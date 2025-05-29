@@ -15,7 +15,7 @@
               v-model.trim="form.user"
               type="text"
               class="input"
-              :readonly="item?.user || running || null"
+              :readonly="!!item?.user || running || undefined"
               :class="{ error: errs?.user }"
               placeholder="Username"
             />
@@ -24,7 +24,7 @@
             <input
               v-model.trim="form.pass"
               type="text"
-              :readonly="running || null"
+              :readonly="running || undefined"
               class="input"
               :class="{ error: errs?.pass }"
               placeholder="Password"
@@ -80,9 +80,8 @@
   import { AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
   import { MessageError, MessageSuccess } from '@/util/Element'
+  import { dialog, fs } from '@/util/NodeFn'
 
-  const { existsSync } = require('fs')
-  const { dialog } = require('@electron/remote')
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
   const props = defineProps<{
@@ -196,11 +195,12 @@
       })
   }
 
-  const doSave = () => {
+  const doSave = async () => {
     if (!checkItem() || running?.value) {
       return
     }
-    if (form.value.dir && !existsSync(form.value.dir)) {
+    const exists = fs.existsSync(form.value.dir)
+    if (form.value.dir && !exists) {
       MessageError(I18nT('base.ftpDirNotExists'))
       errs.value.dir = true
       return

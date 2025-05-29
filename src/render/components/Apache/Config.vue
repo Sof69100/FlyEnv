@@ -38,14 +38,14 @@
       return ''
     }
     const name = md5(version.value.bin!)
-    return join(global.Server.ApacheDir, `common/conf/${name}.conf`)
+    return join(window.Server.ApacheDir, `common/conf/${name}.conf`)
   })
   const defaultFile = computed(() => {
     if (!version?.value || !version?.value?.bin) {
       return ''
     }
     const name = md5(version.value.bin!)
-    return join(global.Server.ApacheDir, `common/conf/${name}.default.conf`)
+    return join(window.Server.ApacheDir, `common/conf/${name}.default.conf`)
   })
 
   const names: CommonSetItem[] = [

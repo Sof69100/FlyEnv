@@ -25,7 +25,7 @@
 
   const currentBaseDir = computed(() => {
     const v = currentVersion?.value?.version?.split('.')?.shift() ?? ''
-    return join(global.Server.BaseDir!, `tomcat/tomcat${v}`)
+    return join(window.Server.BaseDir!, `tomcat/tomcat${v}`)
   })
 
   const log = ref()

@@ -3,10 +3,10 @@
     <el-scrollbar>
       <ul class="menu top-menu">
         <ModuleItem :item="firstItem" :index="0" />
-        <template v-for="(item, index) in customerList" :key="item.id">
+        <template v-for="(item, _index) in customerList" :key="item.id">
           <ModuleItemCustomer :is-customer="true" :item="item" :index="index + 1" />
         </template>
-        <template v-for="(item, index) in allList" :key="index">
+        <template v-for="(item, _index) in allList" :key="_index">
           <ModuleItem :item="item" :index="index + 1" />
         </template>
       </ul>

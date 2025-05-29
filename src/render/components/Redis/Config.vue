@@ -44,14 +44,14 @@
     if (!vm.value) {
       return ''
     }
-    return join(global.Server.RedisDir, `redis-${vm.value}.conf`)
+    return join(window.Server.RedisDir, `redis-${vm.value}.conf`)
   })
 
   const defaultFile = computed(() => {
     if (!vm.value) {
       return ''
     }
-    return join(global.Server.RedisDir, `redis-${vm.value}-default.conf`)
+    return join(window.Server.RedisDir, `redis-${vm.value}-default.conf`)
   })
 
   const names: CommonSetItem[] = [

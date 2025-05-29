@@ -14,7 +14,11 @@
               <span style="display: inline-flex; align-items: center; padding: 2px 0">{{
                 I18nT('host.site')
               }}</span>
-              <el-input v-model.trim="search" :placeholder="I18nT('base.placeholderSearch')" clearable></el-input>
+              <el-input
+                v-model.trim="search"
+                :placeholder="I18nT('base.placeholderSearch')"
+                clearable
+              ></el-input>
             </div>
           </template>
           <template #default="scope">
@@ -139,9 +143,8 @@
   import type { AppHost } from '@shared/app'
   import { isEqual } from 'lodash'
   import { HostStore } from '@/components/Host/store'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { join } from 'path-browserify'
+  import { shell } from '@/util/NodeFn'
 
   const hostList = ref()
   const loading = ref(false)
@@ -272,12 +275,14 @@
         }).then()
         break
       case 'log':
-        const logFile = join(global.Server.BaseDir!, `vhost/logs/${item.name}-tomcat_access_log`)
-        const customTitle = item.name
-        AsyncComponentShow(LogVM, {
-          logFile,
-          customTitle
-        }).then()
+        {
+          const logFile = join(window.Server.BaseDir!, `vhost/logs/${item.name}-tomcat_access_log`)
+          const customTitle = item.name
+          AsyncComponentShow(LogVM, {
+            logFile,
+            customTitle
+          }).then()
+        }
         break
       case 'del':
         Base._Confirm(I18nT('base.areYouSure'), undefined, {

@@ -34,12 +34,12 @@
     if (!vm.value) {
       return ''
     }
-    return join(global.Server.MongoDBDir, `mongodb-${vm.value}.conf`)
+    return join(window.Server.MongoDBDir, `mongodb-${vm.value}.conf`)
   })
 
   const getDefault = () => {
-    const tmpl = join(global.Server.Static, 'tmpl/mongodb.conf')
-    const dataDir = join(global.Server.MongoDBDir, `data-${vm.value}`)
+    const tmpl = join(window.Server.Static, 'tmpl/mongodb.conf')
+    const dataDir = join(window.Server.MongoDBDir, `data-${vm.value}`)
     readFile(tmpl, 'utf-8').then((conf: string) => {
       defaultConf.value = conf.replace('##DB-PATH##', dataDir)
     })

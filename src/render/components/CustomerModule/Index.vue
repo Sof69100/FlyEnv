@@ -1,13 +1,13 @@
 <template>
   <div class="soft-index-panel main-right-panel">
     <el-radio-group v-model="tab" class="mt-3">
-      <template v-for="(item, index) in tabs" :key="index">
+      <template v-for="(item, _index) in tabs" :key="_index">
         <el-radio-button :label="item.label" :value="index"></el-radio-button>
       </template>
     </el-radio-group>
     <div class="main-block">
       <ListVM v-if="tab === 0"></ListVM>
-      <template v-for="(item, index) in tabs" :key="index">
+      <template v-for="(item, _index) in tabs" :key="_index">
         <template v-if="item.isConfig">
           <ConfigVM v-if="item.index === tab" :file="item.path" />
         </template>

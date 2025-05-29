@@ -16,8 +16,7 @@ import { EventBus } from '@/global'
 import { loadCustomerLang } from '@lang/loader'
 import { AppCustomerModule } from '@/core/Module'
 
-const { getGlobal } = require('@electron/remote')
-global.Server = getGlobal('Server')
+window.Server = {}
 
 const app = VueExtend(App)
 loadCustomerLang().then().catch()
@@ -25,7 +24,7 @@ loadCustomerLang().then().catch()
 let inited = false
 IPC.on('APP-Ready-To-Show').then((key: string, res: any) => {
   console.log('APP-Ready-To-Show !!!!!!', key, res)
-  Object.assign(global.Server, res)
+  Object.assign(window.Server, res)
   if (!inited) {
     inited = true
     const store = AppStore()
@@ -50,7 +49,7 @@ IPC.on('APP-Ready-To-Show').then((key: string, res: any) => {
 })
 IPC.on('APP-Update-Global-Server').then((key: string, res: any) => {
   console.log('APP-Update-Global-Server: ', key, res)
-  Object.assign(global.Server, res)
+  Object.assign(window.Server, res)
   const store = AppStore()
   store.envIndex += 1
 })

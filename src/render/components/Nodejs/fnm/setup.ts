@@ -41,8 +41,8 @@ export const Setup = () => {
 
   const xtermDom = ref<HTMLElement>()
 
-  const hasBrew = !!global.Server.BrewCellar
-  const hasPort = !!global.Server.MacPorts
+  const hasBrew = !!window.Server.BrewCellar
+  const hasPort = !!window.Server.MacPorts
 
   const fetchLocal = () => {
     if (FNMSetup.local.length > 0 || FNMSetup.fetching) {
@@ -161,7 +161,7 @@ export const Setup = () => {
     FNMSetup.installEnd = false
     FNMSetup.installing = true
     await nextTick()
-    const arch = global.Server.isAppleSilicon ? '-arm64' : '-x86_64'
+    const arch = window.Server.isAppleSilicon ? '-arm64' : '-x86_64'
     const params = []
     if (proxyStr?.value) {
       params.unshift(proxyStr?.value)
@@ -188,7 +188,7 @@ ${params.join('\n')}`
 
     console.log('content: ', content)
 
-    const file = join(global.Server.Cache!, `fnm-install.sh`)
+    const file = join(window.Server.Cache!, `fnm-install.sh`)
     await writeFile(file, content)
     await chmod(file, '0777')
     await nextTick()

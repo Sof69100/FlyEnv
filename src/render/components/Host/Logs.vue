@@ -20,8 +20,7 @@
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
   import XRadioGroup from '@/components/XRadioGroup/index.vue'
-
-  const { join } = require('path')
+  import { join } from 'path-browserify'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
@@ -58,7 +57,7 @@
   ])
 
   const init = () => {
-    let logpath = join(global.Server.BaseDir, 'vhost/logs')
+    let logpath = join(window.Server.BaseDir!, 'vhost/logs')
     let accesslogng = join(logpath, `${props.name}.log`)
     let errorlogng = join(logpath, `${props.name}.error.log`)
     let accesslogap = join(logpath, `${props.name}-access_log`)

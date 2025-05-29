@@ -150,9 +150,8 @@
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { merge } from 'lodash'
-
-  const { dialog } = require('@electron/remote')
-  const { dirname, basename } = require('path')
+  import { dirname, basename } from 'path-browserify'
+  import { dialog } from '@/util/NodeFn'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

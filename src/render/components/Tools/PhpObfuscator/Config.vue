@@ -51,7 +51,7 @@
     created: function () {},
     mounted() {
       if (!config) {
-        const file = join(global.Server.Static, 'tmpl/yakpro-po.default.cnf')
+        const file = join(window.Server.Static, 'tmpl/yakpro-po.default.cnf')
         config = readFileSync(file, 'utf-8')
       }
       this.config = this.customConfig || config

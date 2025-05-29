@@ -40,12 +40,12 @@
       filepath.value = ''
       return
     }
-    const confFile = join(global.Server.BaseDir, 'rabbitmq', `rabbitmq-${v}.conf`)
+    const confFile = join(window.Server.BaseDir, 'rabbitmq', `rabbitmq-${v}.conf`)
     if (!existsSync(confFile)) {
       filepath.value = ''
       return
     }
-    const logDir = join(global.Server.BaseDir, 'rabbitmq', `log-${v}`)
+    const logDir = join(window.Server.BaseDir, 'rabbitmq', `log-${v}`)
     const content = await readFile(confFile, 'utf-8')
     const name =
       content

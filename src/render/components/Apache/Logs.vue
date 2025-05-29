@@ -21,5 +21,5 @@
   }>()
 
   const log = ref()
-  const filepath = ref(join(global.Server.ApacheDir, `common/logs/${props.type}`))
+  const filepath = ref(join(window.Server.ApacheDir, `common/logs/${props.type}`))
 </script>

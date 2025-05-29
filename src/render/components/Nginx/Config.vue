@@ -22,16 +22,15 @@
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash'
   import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
+  import { join } from 'path-browserify'
 
   const conf = ref()
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const file = computed(() => {
-    return join(global.Server.NginxDir, 'common/conf/nginx.conf')
+    return join(window.Server.NginxDir!, 'common/conf/nginx.conf')
   })
   const defaultFile = computed(() => {
-    return join(global.Server.NginxDir, 'common/conf/nginx.conf.default')
+    return join(window.Server.NginxDir!, 'common/conf/nginx.conf.default')
   })
 
   const names: CommonSetItem[] = [

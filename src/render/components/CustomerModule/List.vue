@@ -152,11 +152,11 @@
     return [
       {
         label: I18nT('setup.module.outputLog'),
-        path: join(global.Server.BaseDir!, 'module-customer', `${item.id}.out.log`)
+        path: join(window.Server.BaseDir!, 'module-customer', `${item.id}.out.log`)
       },
       {
         label: I18nT('setup.module.errorLog'),
-        path: join(global.Server.BaseDir!, 'module-customer', `${item.id}.error.log`)
+        path: join(window.Server.BaseDir!, 'module-customer', `${item.id}.error.log`)
       }
     ]
   }

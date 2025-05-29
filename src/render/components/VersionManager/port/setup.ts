@@ -28,7 +28,7 @@ export const MacPortsSetup = reactive<{
   xterm: undefined,
   reFetch: () => 0,
   checkMacPorts() {
-    if (!global.Server.MacPorts) {
+    if (!window.Server.MacPorts) {
       IPC.send('app-check-brewport').then((key: string) => {
         IPC.off(key)
       })
@@ -54,7 +54,7 @@ export const Setup = (typeFlag: AllAppModule) => {
     if (!appStore.envIndex) {
       return false
     }
-    return !!global.Server.MacPorts
+    return !!window.Server.MacPorts
   })
 
   const fetching = computed(() => {
@@ -168,7 +168,7 @@ export const Setup = (typeFlag: AllAppModule) => {
     } else {
       fn = 'install'
     }
-    const arch = global.Server.isAppleSilicon ? '-arm64' : '-x86_64'
+    const arch = window.Server.isAppleSilicon ? '-arm64' : '-x86_64'
     const name = row.name
     let params = []
 
@@ -183,8 +183,8 @@ export const Setup = (typeFlag: AllAppModule) => {
       names.push(`${name.replace('python', 'py')}-pip`)
     }
     if (['php52', 'php53', 'php54', 'php55', 'php56'].includes(name) && fn === 'install') {
-      const sh = join(global.Server.Static!, 'sh/port-cmd-user.sh')
-      const copyfile = join(global.Server.Cache!, 'port-cmd-user.sh')
+      const sh = join(window.Server.Static!, 'sh/port-cmd-user.sh')
+      const copyfile = join(window.Server.Cache!, 'port-cmd-user.sh')
       if (existsSync(copyfile)) {
         unlinkSync(copyfile)
       }
@@ -208,8 +208,8 @@ export const Setup = (typeFlag: AllAppModule) => {
       chmod(copyfile, '0777')
       params = [`sudo -S "${copyfile}"`]
     } else {
-      const sh = join(global.Server.Static!, 'sh/port-cmd.sh')
-      const copyfile = join(global.Server.Cache!, 'port-cmd.sh')
+      const sh = join(window.Server.Static!, 'sh/port-cmd.sh')
+      const copyfile = join(window.Server.Cache!, 'port-cmd.sh')
       if (existsSync(copyfile)) {
         unlinkSync(copyfile)
       }

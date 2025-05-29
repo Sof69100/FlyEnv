@@ -71,7 +71,7 @@
                 IPC.send('app:password-check', pass).then((key: string, res: any) => {
                   IPC.off(key)
                   if (res?.code === 0) {
-                    global.Server.Password = res?.data ?? pass
+                    window.Server.Password = res?.data ?? pass
                     AppStore()
                       .initConfig()
                       .then(() => {
@@ -95,7 +95,7 @@
           .then()
           .catch()
       }
-      if (!global.Server.Password && fn === 'startService') {
+      if (!window.Server.Password && fn === 'startService') {
         showPasswordTips()
       } else {
         resolve([])

@@ -14,14 +14,14 @@ export const Setup = (typeFlag: AllAppModule, hasStatic?: boolean) => {
     if (!appStore.envIndex) {
       return false
     }
-    return !!global.Server.BrewCellar
+    return !!window.Server.BrewCellar
   })
 
   const checkPort = computed(() => {
     if (!appStore.envIndex) {
       return false
     }
-    return !!global.Server.MacPorts
+    return !!window.Server.MacPorts
   })
 
   const libSrc = computed({

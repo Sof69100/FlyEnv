@@ -80,7 +80,7 @@
 
   onMounted(() => {
     if (!EditorConfigMap.text) {
-      readFile(join(global.Server.Static, 'tmpl/httpd.conf'), 'utf-8').then((text: string) => {
+      readFile(join(window.Server.Static, 'tmpl/httpd.conf'), 'utf-8').then((text: string) => {
         EditorConfigMap.text = text
         initEditor()
       })

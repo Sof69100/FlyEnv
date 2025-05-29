@@ -29,6 +29,6 @@
       return ''
     }
     const v = currentVersion?.value?.split('.')?.slice(0, 2)?.join('.')
-    return join(global.Server.MongoDBDir, `mongodb-${v}.log`)
+    return join(window.Server.MongoDBDir, `mongodb-${v}.log`)
   })
 </script>

@@ -4,9 +4,8 @@ import EN from './en/index'
 import { AppStore } from '@/store/app'
 import { AppAllLang, AppI18n } from '@lang/index'
 import IPC from '@/util/IPC'
-
-const { readdir, readFile, existsSync, mkdirp, writeFile } = require('fs-extra')
-const { join, resolve } = require('path')
+import { readdir, readFile, existsSync, mkdirp, writeFile } from 'fs-extra'
+import { join, resolve } from 'path'
 
 type CustomerLangItem = {
   label: string

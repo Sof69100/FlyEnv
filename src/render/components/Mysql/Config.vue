@@ -23,8 +23,7 @@
   import { debounce } from 'lodash'
   import { AppStore } from '@/store/app'
   import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
+  import { join } from 'path-browserify'
 
   const appStore = AppStore()
   const conf = ref()
@@ -42,14 +41,14 @@
     if (!vm.value) {
       return ''
     }
-    return join(global.Server.MysqlDir, `my-${vm.value}.cnf`)
+    return join(window.Server.MysqlDir!, `my-${vm.value}.cnf`)
   })
 
   const defaultConf = computed(() => {
     if (!vm.value) {
       return ''
     }
-    const dataDir = join(global.Server.MysqlDir, `data-${vm.value}`)
+    const dataDir = join(window.Server.MysqlDir!, `data-${vm.value}`)
     return `[mysqld]
 # Only allow connections from localhost
 bind-address = 127.0.0.1

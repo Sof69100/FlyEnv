@@ -28,7 +28,7 @@ export const BrewSetup = reactive<{
   xterm: undefined,
   reFetch: () => 0,
   checkBrew() {
-    if (!global.Server.BrewCellar) {
+    if (!window.Server.BrewCellar) {
       IPC.send('app-check-brewport').then((key: string) => {
         IPC.off(key)
       })
@@ -54,7 +54,7 @@ export const Setup = (typeFlag: AllAppModule) => {
     if (!appStore.envIndex) {
       return false
     }
-    return !!global.Server.BrewCellar
+    return !!window.Server.BrewCellar
   })
 
   const showBrewError = computed(() => {
@@ -184,11 +184,11 @@ export const Setup = (typeFlag: AllAppModule) => {
     } else {
       fn = 'install'
     }
-    const arch = global.Server.isAppleSilicon ? '-arm64' : '-x86_64'
+    const arch = window.Server.isAppleSilicon ? '-arm64' : '-x86_64'
     const name = row.name
     let params = []
-    const sh = join(global.Server.Static!, 'sh/brew-cmd.sh')
-    const copyfile = join(global.Server.Cache!, 'brew-cmd.sh')
+    const sh = join(window.Server.Static!, 'sh/brew-cmd.sh')
+    const copyfile = join(window.Server.Cache!, 'brew-cmd.sh')
     if (existsSync(copyfile)) {
       unlinkSync(copyfile)
     }
@@ -252,9 +252,9 @@ export const Setup = (typeFlag: AllAppModule) => {
     await nextTick()
     const file =
       appStore.config.setup.lang === 'zh'
-        ? join(global.Server.Static!, 'sh/brew-install.sh')
-        : join(global.Server.Static!, 'sh/brew-install-en.sh')
-    const copyFile = join(global.Server.Cache!, basename(file))
+        ? join(window.Server.Static!, 'sh/brew-install.sh')
+        : join(window.Server.Static!, 'sh/brew-install-en.sh')
+    const copyFile = join(window.Server.Cache!, basename(file))
     copyFileSync(file, copyFile)
     const execXTerm = new XTerm()
     BrewSetup.xterm = execXTerm

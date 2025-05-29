@@ -31,10 +31,10 @@
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const conf = ref()
   const file = computed(() => {
-    return join(global.Server.BaseDir, 'mailpit/mailpit.conf')
+    return join(window.Server.BaseDir, 'mailpit/mailpit.conf')
   })
   const defaultFile = computed(() => {
-    return join(global.Server.BaseDir, 'mailpit/mailpit.conf.default')
+    return join(window.Server.BaseDir, 'mailpit/mailpit.conf.default')
   })
 
   const names: CommonSetItem[] = [

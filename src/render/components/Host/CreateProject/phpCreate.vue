@@ -114,10 +114,9 @@
   import installedVersions from '@/util/InstalledVersions'
   import { ProjectSetup } from '@/components/Host/CreateProject/project'
   import XTerm from '@/util/XTerm'
+  import { join } from 'path-browserify'
+  import { dialog, fs } from '@/util/NodeFn'
 
-  const { writeFile } = require('fs-extra')
-  const { join } = require('path')
-  const { dialog } = require('@electron/remote')
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()
 
   const props = defineProps<{
@@ -198,9 +197,9 @@
     const form = ProjectSetup.form.PHP
     const execXTerm = new XTerm()
     const command: string[] = []
-    if (global.Server.Proxy) {
-      for (const k in global.Server.Proxy) {
-        const v = global.Server.Proxy[k]
+    if (window.Server.Proxy) {
+      for (const k in window.Server.Proxy) {
+        const v = window.Server.Proxy[k]
         command.push(`export ${k}="${v}"`)
       }
     }
@@ -218,7 +217,7 @@
   }
 }
 `
-      await writeFile(join(form.dir, 'composer.json'), tmpl)
+      await fs.writeFile(join(form.dir, 'composer.json'), tmpl)
 
       if (form.php && form.composer) {
         command.push(`"${form.php}" "${form.composer}" self-update`)

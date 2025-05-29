@@ -1,7 +1,7 @@
 <template>
   <div class="soft-index-panel main-right-panel">
     <el-radio-group v-model="tab" class="mt-3">
-      <template v-for="(item, index) in tabs" :key="index">
+      <template v-for="(item, _index) in tabs" :key="_index">
         <el-radio-button :label="item" :value="index"></el-radio-button>
       </template>
     </el-radio-group>
@@ -55,7 +55,7 @@
     return brewStore.module('mailpit').installed.some((m) => m.run)
   })
   const openURL = async () => {
-    const iniFile = join(global.Server.BaseDir!, 'mailpit/mailpit.conf')
+    const iniFile = join(window.Server.BaseDir!, 'mailpit/mailpit.conf')
     if (existsSync(iniFile)) {
       const content = await readFile(iniFile, 'utf-8')
       const logStr = content.split('\n').find((s: string) => s.includes('MP_UI_BIND_ADDR'))

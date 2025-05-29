@@ -89,11 +89,11 @@ export const Setup = (version: SoftInstalled) => {
     MacPortsSetup.installEnd = false
 
     let fn = row?.status ? 'uninstall' : 'install'
-    const arch = global.Server.isAppleSilicon ? '-arm64' : '-x86_64'
+    const arch = window.Server.isAppleSilicon ? '-arm64' : '-x86_64'
     const name = row.libName
     const params = []
-    const sh = join(global.Server.Static!, 'sh/port-cmd.sh')
-    const copyfile = join(global.Server.Cache!, 'port-cmd.sh')
+    const sh = join(window.Server.Static!, 'sh/port-cmd.sh')
+    const copyfile = join(window.Server.Cache!, 'port-cmd.sh')
     if (existsSync(copyfile)) {
       unlinkSync(copyfile)
     }
@@ -179,7 +179,7 @@ export const Setup = (version: SoftInstalled) => {
   }
 
   const copyXDebugTmpl = (row: any) => {
-    const output_dir = join(global.Server.PhpDir!, 'xdebug')
+    const output_dir = join(window.Server.PhpDir!, 'xdebug')
     const txt = `zend_extension = "${row.soname}"
 ;[FlyEnv-xdebug-ini-begin]
 [xdebug]

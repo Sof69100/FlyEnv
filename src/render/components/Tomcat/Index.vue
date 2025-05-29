@@ -1,7 +1,7 @@
 <template>
   <div class="soft-index-panel main-right-panel">
     <el-radio-group v-model="tab" class="mt-3">
-      <template v-for="(item, index) in tabs" :key="index">
+      <template v-for="(item, _index) in tabs" :key="_index">
         <el-radio-button :label="item" :value="index"></el-radio-button>
       </template>
     </el-radio-group>
@@ -76,7 +76,7 @@
           return TomcatSetup.CATALINA_BASE[currentVersion.value.bin]
         }
         const v = currentVersion?.value?.version?.split('.')?.shift() ?? ''
-        return join(global.Server.BaseDir!, `tomcat/tomcat${v}`)
+        return join(window.Server.BaseDir!, `tomcat/tomcat${v}`)
       }
       return I18nT('base.needSelectVersion')
     },

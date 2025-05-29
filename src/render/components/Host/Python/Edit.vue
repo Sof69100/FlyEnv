@@ -39,7 +39,7 @@
         <div class="plant-title">{{ I18nT('host.pythonPath') }}</div>
         <div class="main">
           <el-select v-model="item.pythonDir" class="w-full">
-            <template v-for="(item, index) in pythons" :key="index">
+            <template v-for="(item, _index) in pythons" :key="_index">
               <el-option :label="`java${item.version}-${item.bin}`" :value="item.bin"></el-option>
             </template>
           </el-select>
@@ -161,9 +161,8 @@
   import { merge } from 'lodash'
   import { BrewStore } from '@/store/brew'
   import installedVersions from '@/util/InstalledVersions'
-
-  const { dialog } = require('@electron/remote')
-  const { dirname, basename } = require('path')
+  import { dirname, basename } from 'path-browserify'
+  import { dialog } from '@/util/NodeFn'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

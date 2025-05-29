@@ -21,7 +21,7 @@
               <span class="url empty">{{ $t('base.none') }}</span>
             </template>
             <template v-else>
-              <template v-for="(url, index) in item.host" :key="index">
+              <template v-for="(url, index) in item.host" :key="_index">
                 <QrcodePopper :url="url">
                   <span class="url" @click="doJump(url)">{{ url }} </span>
                 </QrcodePopper>

@@ -14,7 +14,11 @@
               <span style="display: inline-flex; align-items: center; padding: 2px 0">{{
                 I18nT('host.site')
               }}</span>
-              <el-input v-model.trim="search" :placeholder="I18nT('base.placeholderSearch')" clearable></el-input>
+              <el-input
+                v-model.trim="search"
+                :placeholder="I18nT('base.placeholderSearch')"
+                clearable
+              ></el-input>
             </div>
           </template>
           <template #default="scope">
@@ -181,11 +185,8 @@
   import { isEqual } from 'lodash'
   import { HostStore } from '@/components/Host/store'
   import { MessageError, MessageSuccess } from '@/util/Element'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
-
-  //nohup {project_cmd}{nohup_log} & echo $! > {pid_file}
+  import { join } from 'path-browserify'
+  import { shell } from '@/util/NodeFn'
 
   const hostList = ref()
   const loading = ref(false)
@@ -328,12 +329,14 @@
         }).then()
         break
       case 'log':
-        const logFile = join(global.Server.BaseDir!, `nodejs/${item.id}.log`)
-        const customTitle = item.projectName
-        AsyncComponentShow(LogVM, {
-          logFile,
-          customTitle
-        }).then()
+        {
+          const logFile = join(window.Server.BaseDir!, `nodejs/${item.id}.log`)
+          const customTitle = item.projectName
+          AsyncComponentShow(LogVM, {
+            logFile,
+            customTitle
+          }).then()
+        }
         break
       case 'del':
         Base._Confirm(I18nT('base.areYouSure'), undefined, {

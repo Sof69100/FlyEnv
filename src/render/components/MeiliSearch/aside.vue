@@ -56,7 +56,7 @@
   ) => {
     return new Promise<any[]>((resolve) => {
       if (fn === 'startService') {
-        const dir = join(global.Server.BaseDir!, `meilisearch`)
+        const dir = join(window.Server.BaseDir!, `meilisearch`)
         const p = MeiliSearchSetup.dir?.[version.bin] ?? dir
         resolve([p])
         return

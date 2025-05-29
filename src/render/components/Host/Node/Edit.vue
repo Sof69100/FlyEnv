@@ -79,7 +79,7 @@
         <div class="plant-title">{{ I18nT('host.nodeJSVersion') }}</div>
         <div class="main">
           <el-select v-model="item.nodeDir" class="w-full">
-            <template v-for="(item, index) in nodes" :key="index">
+            <template v-for="(item, _index) in nodes" :key="_index">
               <el-option :label="`node${item.version}-${item.bin}`" :value="item.bin"></el-option>
             </template>
           </el-select>
@@ -171,10 +171,8 @@
   import { BrewStore } from '@/store/brew'
   import { Service } from '@/components/ServiceManager/service'
   import installedVersions from '@/util/InstalledVersions'
-
-  const { dialog } = require('@electron/remote')
-  const { existsSync, readFile } = require('fs-extra')
-  const { dirname, join } = require('path')
+  import { dirname, join } from 'path-browserify'
+  import { dialog, fs } from '@/util/NodeFn'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
@@ -240,18 +238,21 @@
   watch(
     () => item.value.bin,
     async (v) => {
-      if (!v || !existsSync(v)) {
+      if (!v) {
         return
       }
       const packageJson = join(dirname(v), 'package.json')
-      if (!existsSync(packageJson)) {
+      const exists = fs.existsSync(packageJson)
+      if (!exists) {
         return
       }
-      let json: any = await readFile(packageJson, 'utf-8')
+      let json: any = await fs.readFile(packageJson, 'utf-8')
       try {
         json = JSON.parse(json)
         scripts.value = json?.scripts ?? {}
-      } catch (e) {}
+      } catch {
+        /* empty */
+      }
     }
   )
 
@@ -260,7 +261,7 @@
     (v) => {
       const dict: any = scripts?.value
       if (dict?.[v]) {
-        item.value.startCommand === `node ${dict[v]}`
+        item.value.startCommand = `node ${dict[v]}`
       }
     }
   )

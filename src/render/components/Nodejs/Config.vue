@@ -28,7 +28,7 @@
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const conf = ref()
   const file = computed(() => {
-    return join(global.Server.UserHome!, '.npmrc')
+    return join(window.Server.UserHome!, '.npmrc')
   })
 
   const baseOptions = [

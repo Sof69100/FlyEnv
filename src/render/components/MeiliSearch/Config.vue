@@ -35,13 +35,13 @@
     if (index.value < 0) {
       return ''
     }
-    return join(global.Server.BaseDir, 'meilisearch/meilisearch.toml')
+    return join(window.Server.BaseDir, 'meilisearch/meilisearch.toml')
   })
   const defaultFile = computed(() => {
     if (index.value < 0) {
       return ''
     }
-    return join(global.Server.BaseDir, 'meilisearch/meilisearch.default.toml')
+    return join(window.Server.BaseDir, 'meilisearch/meilisearch.default.toml')
   })
 
   const names: CommonSetItem[] = [

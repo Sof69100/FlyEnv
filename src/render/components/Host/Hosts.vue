@@ -33,8 +33,7 @@
   import { VueExtend } from '@/core/VueExtend.ts'
   import { EditorConfigMake, EditorCreate } from '@/util/Editor.ts'
   import { MessageError, MessageSuccess } from '@/util/Element.ts'
-
-  const { shell } = require('@electron/remote')
+  import { shell } from '@/util/NodeFn.js'
 
   export default {
     show(data) {
@@ -44,7 +43,7 @@
         let vm = VueExtend(this, data)
         const intance = vm.mount(dom)
         intance.onClosed = () => {
-          dom && dom.remove()
+          dom?.remove()
           dom = null
           console.log('intance.onClosed !!!!!!')
         }
@@ -69,7 +68,7 @@
       })
     },
     unmounted() {
-      this.monacoInstance && this.monacoInstance.dispose()
+      this.monacoInstance?.dispose()
       this.monacoInstance = null
     },
     methods: {

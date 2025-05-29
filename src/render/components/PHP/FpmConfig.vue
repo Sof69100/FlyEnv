@@ -44,7 +44,7 @@
 
   const file = computed(() => {
     const num = props.item?.num ?? 0
-    return join(global.Server.PhpDir!, `${num}/conf/php-fpm.conf`)
+    return join(window.Server.PhpDir!, `${num}/conf/php-fpm.conf`)
   })
 
   const defaultConf = computed(() => {

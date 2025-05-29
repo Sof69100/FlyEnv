@@ -77,7 +77,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue'
+  import { computed, ref, watch } from 'vue'
   import { type SoftInstalled } from '@/store/brew'
   import { I18nT } from '@lang/index'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
@@ -85,9 +85,8 @@
   import LoadedVM from './Extension/Loaded/index.vue'
   import PortsVM from './Extension/Macports/index.vue'
   import { Setup } from '@/components/PHP/Extension/setup'
-
-  const { join } = require('path')
-  const { existsSync } = require('fs')
+  import { join } from 'path-browserify'
+  import { fs } from '@/util/NodeFn'
 
   const props = defineProps<{
     version: SoftInstalled
@@ -111,11 +110,23 @@
     return props.version?.flag === 'macports'
   })
   const isHomeBrew = computed(() => {
-    return props.version?.path?.includes(global?.Server?.BrewCellar ?? '-----')
+    return props.version?.path?.includes(window.Server?.BrewCellar ?? '-----')
   })
+  const exists = ref(false)
+  watch(
+    () => props.version?.phpConfig ?? join(props.version?.path, 'bin/php-config'),
+    (v) => {
+      fs.existsSync(v).then((res) => {
+        exists.value = res
+      })
+    },
+    {
+      immediate: true
+    }
+  )
   const isStatic = computed(() => {
     const pkconfig = props.version?.phpConfig ?? join(props.version?.path, 'bin/php-config')
-    return !pkconfig || !existsSync(pkconfig)
+    return !pkconfig || !exists.value
   })
 
   defineExpose({

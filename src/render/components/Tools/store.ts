@@ -11,7 +11,7 @@ const getToolData = async () => {
     like: [],
     custom: []
   }
-  const file = join(global.Server.BaseDir!, 'app.tools.json')
+  const file = join(window.Server.BaseDir!, 'app.tools.json')
   if (existsSync(file)) {
     const json = await readFile(file, 'utf-8')
     try {
@@ -22,7 +22,7 @@ const getToolData = async () => {
 }
 
 const setToolData = async (data: any) => {
-  const file = join(global.Server.BaseDir!, 'app.tools.json')
+  const file = join(window.Server.BaseDir!, 'app.tools.json')
   await writeFile(file, JSON.stringify(data))
 }
 

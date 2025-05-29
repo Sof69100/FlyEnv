@@ -8,8 +8,7 @@ import { useBase64 } from '@vueuse/core'
 import IPC from '@/util/IPC'
 import { AISetup } from '@/components/AI/setup'
 import { getAllFileAsync } from '@shared/file'
-
-const { existsSync } = require('fs-extra')
+import { fs } from '@/util/NodeFn'
 
 export class AIOllama extends AIBase {
   async _HanleToolCalls(tools: ToolCallItem[]) {
@@ -18,8 +17,8 @@ export class AIOllama extends AIBase {
       console.log('tool: ', tool, tool.function.name)
       if (tool.function.name === 'get_folder_all_files') {
         const dir = tool.function.arguments.dir
-        console.log('get_folder_all_files: ', dir, existsSync(dir))
-        if (!dir || !existsSync(dir)) {
+        const exists = await fs.existsSync(dir)
+        if (!dir || !exists) {
           continue
         }
         getAllFileAsync(dir).then((files) => {

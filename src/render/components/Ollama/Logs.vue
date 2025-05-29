@@ -17,5 +17,5 @@
   const { join } = require('path')
 
   const log = ref()
-  const filepath = ref(join(global.Server.BaseDir, `ollama/ollama.log`))
+  const filepath = ref(join(window.Server.BaseDir, `ollama/ollama.log`))
 </script>

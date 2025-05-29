@@ -42,9 +42,8 @@
   import IPC from '@/util/IPC'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { uuid } from '@shared/utils'
-
-  const { existsSync } = require('fs')
-  const { join } = require('path')
+  import { join } from 'path-browserify'
+  import { fs } from '@/util/NodeFn'
 
   const props = defineProps<{
     version: SoftInstalled
@@ -67,7 +66,7 @@
     }
     return `${file.value}.default`
   })
-  const cacert = join(global.Server.BaseDir!, 'CA/cacert.pem')
+  const cacert = join(window.Server.BaseDir!, 'CA/cacert.pem')
   const names: CommonSetItem[] = [
     {
       name: 'display_errors',
@@ -314,7 +313,20 @@
     }
   }
 
-  if (flag.value && (!file.value || !existsSync(file.value))) {
+  const fileExists = ref(false)
+  watch(
+    file,
+    (val) => {
+      fs.existsSync(val).then((res) => {
+        fileExists.value = res
+      })
+    },
+    {
+      immediate: true
+    }
+  )
+
+  if (flag.value && (!file.value || !fileExists.value)) {
     IPC.send('app-fork:php', 'getIniPath', JSON.parse(JSON.stringify(props.version))).then(
       (key: string, res: any) => {
         console.log(res)
@@ -322,7 +334,7 @@
         if (res.code === 0) {
           ConfStore.phpIniFiles[flag.value] = res.data
           ConfStore.save()
-          conf?.value?.update && conf.value.update()
+          conf?.value?.update()
         }
       }
     )

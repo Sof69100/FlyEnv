@@ -23,7 +23,7 @@
       </ul>
       <el-scrollbar>
         <ul class="menu top-menu">
-          <template v-for="(item, index) in allModule" :key="index">
+          <template v-for="(item, _index) in allModule" :key="_index">
             <div
               :style="
                 {

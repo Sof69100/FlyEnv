@@ -58,7 +58,7 @@
           current: NodeDefaultSetup.current === row.version,
           'hover-yellow-500': !!row.installed
         }
-        const path = join(global.Server.AppDir, `nodejs/${row.version}/bin`)
+        const path = join(window.Server.AppDir, `nodejs/${row.version}/bin`)
         const tips = `export PATH="${path}:$PATH"`
         const disabled = !row.installed
         return (

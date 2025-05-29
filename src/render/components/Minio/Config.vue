@@ -24,9 +24,8 @@
   import { debounce } from 'lodash'
   import Common from '@/components/Conf/common.vue'
   import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
-  const { existsSync } = require('fs-extra')
+  import { join } from 'path-browserify'
+  import { fs } from '@/util/NodeFn'
 
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const conf = ref()
@@ -35,7 +34,7 @@
     if (index.value < 0) {
       return ''
     }
-    return join(global.Server.BaseDir, 'minio/minio.conf')
+    return join(window.Server.BaseDir!, 'minio/minio.conf')
   })
 
   const names: CommonSetItem[] = [
@@ -418,12 +417,13 @@
       getCommonSetting()
     }
   }
-
-  if (!existsSync(file.value)) {
-    IPC.send('app-fork:minio', 'initConfig').then((key: string) => {
-      IPC.off(key)
-      index.value += 1
-      conf?.value?.update()
-    })
-  }
+  fs.existsSync(file.value).then((e) => {
+    if (!e) {
+      IPC.send('app-fork:minio', 'initConfig').then((key: string) => {
+        IPC.off(key)
+        index.value += 1
+        conf?.value?.update()
+      })
+    }
+  })
 </script>

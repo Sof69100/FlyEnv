@@ -1,9 +1,8 @@
 import type { StaticHttpServe } from '../type'
 import type { ServerResponse } from 'http'
-
-const ServeHandler = require('serve-handler')
-const Http = require('http')
-const IP = require('neoip')
+import ServeHandler from 'serve-handler'
+import Http from 'http'
+import IP from 'neoip'
 
 class HttpServer {
   httpServes: { [k: string]: StaticHttpServe } = {}

@@ -16,7 +16,7 @@ export const LangSetup = reactive({
   },
   async openLangDir() {
     await initCustomerLang()
-    const langDir = resolve(global.Server.BaseDir!, '../lang')
+    const langDir = resolve(window.Server.BaseDir!, '../lang')
     shell.openPath(langDir).then().catch()
   }
 })

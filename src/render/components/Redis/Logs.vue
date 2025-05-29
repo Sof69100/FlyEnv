@@ -29,6 +29,6 @@
       return ''
     }
     const vNum = currentVersion?.value?.version?.split('.')?.[0]
-    return join(global.Server.RedisDir, `redis-${vNum}.log`)
+    return join(window.Server.RedisDir, `redis-${vNum}.log`)
   })
 </script>

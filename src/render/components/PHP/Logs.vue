@@ -45,7 +45,7 @@
   })
 
   const filepath = computed(() => {
-    return join(global.Server.PhpDir, `${props.version.num}`, `var/log/${props.type}.log`)
+    return join(window.Server.PhpDir, `${props.version.num}`, `var/log/${props.type}.log`)
   })
 
   const close = () => {

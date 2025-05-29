@@ -52,6 +52,7 @@ export default class Application extends EventEmitter {
     this.initLang()
     this.menuManager = new MenuManager()
     this.menuManager.setup()
+    this.initServerDir()
     this.windowManager = new WindowManager({
       configManager: this.configManager
     })
@@ -60,7 +61,6 @@ export default class Application extends EventEmitter {
     this.trayManager = new TrayManager()
     this.initTrayManager()
     this.initUpdaterManager()
-    this.initServerDir()
     this.handleCommands()
     this.handleIpcMessages()
     this.initForkManager()
@@ -304,6 +304,12 @@ export default class Application extends EventEmitter {
     this.mainWindow = win
     this.checkBrewOrPort()
     AppLog.init(this.mainWindow)
+    this.windowManager.sendCommandTo(
+      win,
+      'APP-Update-Global-Server',
+      'APP-Update-Global-Server',
+      JSON.parse(JSON.stringify(global.Server))
+    )
     win.once('ready-to-show', () => {
       this.isReady = true
       this.emit('ready')

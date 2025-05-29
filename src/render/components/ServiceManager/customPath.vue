@@ -19,7 +19,7 @@
         />
       </div>
       <div class="main">
-        <template v-for="(item, index) in dirs" :key="index">
+        <template v-for="(item, _index) in dirs" :key="_index">
           <div class="path-choose mb-20">
             <input type="text" class="input" placeholder="Document Root Directory" readonly="" :value="item" />
             <div class="icon-block">

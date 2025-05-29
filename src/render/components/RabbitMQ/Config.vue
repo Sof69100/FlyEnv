@@ -36,7 +36,7 @@
       return ''
     }
     const v = currentVersion?.value?.version?.split('.')?.[0] ?? ''
-    return join(global.Server.BaseDir, 'rabbitmq', `rabbitmq-${v}-default.conf`)
+    return join(window.Server.BaseDir, 'rabbitmq', `rabbitmq-${v}-default.conf`)
   })
 
   watch(

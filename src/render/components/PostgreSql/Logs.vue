@@ -37,7 +37,7 @@
     }
     const version = currentVersion.value?.version
     const versionTop = version?.split('.')?.shift()
-    const dbPath = join(global.Server.PostgreSqlDir, `postgresql${versionTop}`)
+    const dbPath = join(window.Server.PostgreSqlDir, `postgresql${versionTop}`)
     return join(dbPath, 'pg.log')
   })
 </script>

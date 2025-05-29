@@ -30,10 +30,10 @@
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const conf = ref()
   const file = computed(() => {
-    return join(global.Server.BaseDir, 'ollama/ollama.conf')
+    return join(window.Server.BaseDir, 'ollama/ollama.conf')
   })
   const defaultFile = computed(() => {
-    return join(global.Server.BaseDir, 'ollama/ollama.conf.default')
+    return join(window.Server.BaseDir, 'ollama/ollama.conf.default')
   })
 
   const names: CommonSetItem[] = [

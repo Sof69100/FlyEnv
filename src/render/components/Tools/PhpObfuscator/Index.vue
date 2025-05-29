@@ -19,7 +19,7 @@
             :class="errs['phpversion'] ? ' error' : ''"
             :placeholder="$t('php.obfuscatorPhpVersion')"
           >
-            <template v-for="(item, index) in phpVersions" :key="index">
+            <template v-for="(item, _index) in phpVersions" :key="_index">
               <el-option :value="item.path + '-' + item.version" :label="item.version"></el-option>
             </template>
           </el-select>

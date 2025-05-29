@@ -65,8 +65,8 @@ export const Setup = () => {
     NodeDefaultSetup.switching = true
     item.switching = true
     const param: any = {
-      bin: join(global.Server.AppDir!, `nodejs/v${item.version}/bin/node`),
-      path: join(global.Server.AppDir!, `nodejs/v${item.version}`)
+      bin: join(window.Server.AppDir!, `nodejs/v${item.version}/bin/node`),
+      path: join(window.Server.AppDir!, `nodejs/v${item.version}`)
     }
     ServiceActionStore.updatePath(param, 'node')
       .then(() => {
@@ -127,7 +127,7 @@ export const Setup = () => {
       store.all
         .filter((v) => {
           const a = !NodeDefaultSetup.local.includes(v)
-          if (global.Server.isAppleSilicon) {
+          if (window.Server.isAppleSilicon) {
             const vn = Number(v.split('.')[0])
             const b = !isNaN(vn) && vn > 15
             return a && b

@@ -42,14 +42,14 @@
     if (!vm.value) {
       return ''
     }
-    return join(global.Server.MariaDBDir, `my-${vm.value}.cnf`)
+    return join(window.Server.MariaDBDir, `my-${vm.value}.cnf`)
   })
 
   const defaultConf = computed(() => {
     if (!vm.value) {
       return ''
     }
-    const dataDir = join(global.Server.MariaDBDir, `data-${vm.value}`)
+    const dataDir = join(window.Server.MariaDBDir, `data-${vm.value}`)
     return `[mariadbd]
 # Only allow connections from localhost
 bind-address = 127.0.0.1

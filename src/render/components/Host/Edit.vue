@@ -223,7 +223,7 @@
             <div class="flex justify-center">{{ I18nT('base.none') }}</div>
           </template>
           <template v-else>
-            <template v-for="(proxy, index) in item.reverseProxy" :key="index">
+            <template v-for="(proxy, index) in item.reverseProxy" :key="_index">
               <div class="flex items-center justify-between gap-2">
                 <el-button link :icon="Delete" @click.stop="delReverseProxy(index)"></el-button>
                 <el-input v-model="proxy.path" class="w-28 ml-2"></el-input>
@@ -251,10 +251,8 @@
   import { Plus, Delete } from '@element-plus/icons-vue'
   import SSLTips from './SSLTips/index.vue'
   import NginxRewrite from './Edit/nginxRewrite.vue'
-
-  const { dialog } = require('@electron/remote')
-  const { join } = require('path')
-  const { mkdirp } = require('fs-extra')
+  import { join } from 'path-browserify'
+  import { dialog, fs } from '@/util/NodeFn'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
@@ -333,8 +331,8 @@
     )
   })
 
-  const nginxRewriteTemplateDir = join(global.Server.BaseDir!, 'NginxRewriteTemplate')
-  mkdirp(nginxRewriteTemplateDir).then().catch()
+  const nginxRewriteTemplateDir = join(window.Server.BaseDir!, 'NginxRewriteTemplate')
+  fs.mkdirp(nginxRewriteTemplateDir).then().catch()
 
   watch(
     phpVersions,

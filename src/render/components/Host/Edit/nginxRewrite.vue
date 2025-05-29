@@ -80,11 +80,8 @@
   import { FolderOpened } from '@element-plus/icons-vue'
   import { Project } from '@/util/Project'
   import { HostNginxRewriteSetup } from '@/components/Host/Edit/rewrite'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
-  const { readFile } = require('fs-extra')
-  const { existsSync } = require('fs')
+  import { join } from 'path-browserify'
+  import { fs, shell } from '@/util/NodeFn'
 
   const props = defineProps<{
     modelValue: string
@@ -95,7 +92,7 @@
 
   const input = ref()
 
-  const nginxRewriteTemplateDir = join(global.Server.BaseDir!, 'NginxRewriteTemplate')
+  const nginxRewriteTemplateDir = join(window.Server.BaseDir!, 'NginxRewriteTemplate')
 
   HostNginxRewriteSetup.initNginxRewrites()
   HostNginxRewriteSetup.initNginxRewriteCustomWatch()
@@ -114,32 +111,49 @@
 
   const rewriteKey = ref('')
 
-  const nginxRewriteFile = computed(() => {
-    const rewritepath = join(global.Server.BaseDir!, 'vhost/rewrite')
-    const rewritep = join(rewritepath, `${props.itemName}.conf`)
-    if (existsSync(rewritep)) {
-      return rewritep
-    }
-    return null
-  })
+  const nginxRewriteFileExists = ref(false)
 
-  const readNginxRewriteFromFile = () => {
-    if (!nginxRewriteFile.value) {
-      return
-    }
-    try {
-      readFile(nginxRewriteFile.value, 'utf-8').then((str: string) => {
-        emits('update:modelValue', str)
-        monacoInstance?.setValue?.(str)
-      })
-    } catch (e) {}
-  }
+  const nginxRewriteFile = computed(() => {
+    const rewritepath = join(window.Server.BaseDir!, 'vhost/rewrite')
+    const rewritep = join(rewritepath, `${props.itemName}.conf`)
+    return rewritep
+  })
 
   watch(
     nginxRewriteFile,
     (v) => {
       if (v) {
-        HostNginxRewriteSetup.initFileWatch(v, readNginxRewriteFromFile)
+        fs.existsSync(v).then((exists: boolean) => {
+          nginxRewriteFileExists.value = exists
+        })
+      } else {
+        nginxRewriteFileExists.value = false
+      }
+    },
+    {
+      immediate: true
+    }
+  )
+
+  const readNginxRewriteFromFile = () => {
+    if (!nginxRewriteFileExists.value) {
+      return
+    }
+    try {
+      fs.readFile(nginxRewriteFile.value, 'utf-8').then((str: string) => {
+        emits('update:modelValue', str)
+        monacoInstance?.setValue?.(str)
+      })
+    } catch {
+      /* empty */
+    }
+  }
+
+  watch(
+    nginxRewriteFileExists,
+    (v) => {
+      if (v) {
+        HostNginxRewriteSetup.initFileWatch(nginxRewriteFile.value, readNginxRewriteFromFile)
       }
     },
     {
@@ -220,7 +234,7 @@
     })
   })
   onUnmounted(() => {
-    monacoInstance && monacoInstance.dispose()
+    monacoInstance?.dispose()
     monacoInstance = null
     HostNginxRewriteSetup.deinitFileWatch()
     HostNginxRewriteSetup.deinitNginxRewriteCustomWatch()

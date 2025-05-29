@@ -140,9 +140,7 @@
   import { MessageSuccess, MessageWarning } from '@/util/Element'
   import { I18nT } from '@lang/index'
   import { AppStore } from '@/store/app'
-
-  const { dialog, clipboard } = require('@electron/remote')
-  const { statSync, readFile } = require('fs-extra')
+  import { dialog, fs, clipboard } from '@/util/NodeFn'
 
   const appStore = AppStore()
 
@@ -248,18 +246,23 @@
         if (canceled || filePaths.length === 0) {
           return
         }
-        const arr = filePaths.filter((f: string) => {
-          const info = statSync(f)
-          return info.size < 2 * 1024 * 1024
-        })
+        const arr = []
+        for (const file of filePaths) {
+          const info: any = await fs.stat(file)
+          if (info.size < 2 * 1024 * 1024) {
+            arr.push(file)
+          }
+        }
         if (arr.length !== filePaths.length) {
-            MessageWarning('Some files are larger than 2MB and have been ignored')
+          MessageWarning('Some files are larger than 2MB and have been ignored')
         }
         for (const file of arr) {
           try {
-            const content = await readFile(file, 'utf-8')
+            const content = await fs.readFile(file, 'utf-8')
             currentChat.value!.content += `\n\`\`\`\n${content}\n\`\`\`\n`
-          } catch (e) {}
+          } catch {
+            /* empty */
+          }
         }
       })
   }
