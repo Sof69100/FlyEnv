@@ -1,12 +1,13 @@
 import crypto from 'crypto'
 import { merge } from 'lodash'
 import { appDebugLog } from '@shared/file'
+import { spawn, exec } from 'child_process'
+import { cpus } from 'os'
+import { join } from 'path'
+import { chmod, copyFile } from 'fs-extra'
+import { promisify } from 'util'
 
-const { spawn } = require('child_process')
-const { exec } = require('child-process-promise')
-const os = require('os')
-const { join } = require('path')
-const { chmod, copyFile } = require('fs-extra')
+const execPromise = promisify(exec)
 
 let AppEnv: any
 
@@ -20,7 +21,7 @@ export async function fixEnv(): Promise<{ [k: string]: any }> {
   let text = ''
   try {
     await chmod(file, '0777')
-    const res = await exec(`./env.sh`, {
+    const res = await execPromise(`./env.sh`, {
       cwd: global.Server.Cache!,
       shell: '/bin/zsh'
     })
@@ -109,7 +110,7 @@ export function formatBytes(bytes: number, decimals = 2) {
 }
 
 export function isAppleSilicon() {
-  const cpuCore = os.cpus()
+  const cpuCore = cpus()
   return cpuCore[0].model.includes('Apple')
 }
 

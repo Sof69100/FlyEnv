@@ -1,11 +1,14 @@
-import { exec } from 'child-process-promise'
 import { BaseManager } from './Base'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+
+const execAsync = promisify(exec)
 
 class Manager extends BaseManager {
   sslAddTrustedCert(cwd: string): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
-        await exec(
+        await execAsync(
           `security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" "PhpWebStudy-Root-CA.crt"`,
           {
             cwd
@@ -22,7 +25,7 @@ class Manager extends BaseManager {
   sslFindCertificate(cwd: string) {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await exec(`security find-certificate -c "PhpWebStudy-Root-CA"`, {
+        const res = await execAsync(`security find-certificate -c "PhpWebStudy-Root-CA"`, {
           cwd
         })
         resolve({
@@ -38,10 +41,10 @@ class Manager extends BaseManager {
   dnsRefresh() {
     return new Promise(async (resolve) => {
       try {
-        await exec(`dscacheutil -flushcache`)
+        await execAsync(`dscacheutil -flushcache`)
       } catch (e) {}
       try {
-        await exec(`killall -HUP mDNSResponder`)
+        await execAsync(`killall -HUP mDNSResponder`)
       } catch (e) {}
       resolve(true)
     })

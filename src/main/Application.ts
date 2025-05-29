@@ -9,7 +9,7 @@ import UpdateManager from './core/UpdateManager'
 import { join, resolve } from 'path'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 import TrayManager from './ui/TrayManager'
-import { getLanguage } from './utils'
+import { getLanguage, isAppleSilicon } from './utils'
 import { AppI18n, I18nT, AppAllLang } from '@lang/index'
 import DnsServerManager from './core/DNS'
 import type { PtyItem } from './type'
@@ -24,10 +24,8 @@ import AppHelper from './core/AppHelper'
 import Helper from '../fork/Helper'
 import ScreenManager from './core/ScreenManager'
 import AppLog from './core/AppLog'
-
-const { createFolder, readFileAsync, writeFileAsync } = require('../shared/file')
-const { isAppleSilicon } = require('../shared/utils')
-const compressing = require('compressing')
+import compressing from 'compressing'
+import { mkdirp, readFile, writeFile } from 'fs-extra'
 
 export default class Application extends EventEmitter {
   isReady: boolean
@@ -221,8 +219,8 @@ export default class Application extends EventEmitter {
     global.Server.isAppleSilicon = isAppleSilicon()
     global.Server.BaseDir = join(runpath, 'server')
     global.Server.AppDir = join(runpath, 'app')
-    createFolder(global.Server.BaseDir)
-    createFolder(global.Server.AppDir)
+    mkdirp(global.Server.BaseDir).then().catch()
+    mkdirp(global.Server.AppDir).then().catch()
     global.Server.NginxDir = join(runpath, 'server/nginx')
     global.Server.PhpDir = join(runpath, 'server/php')
     global.Server.MysqlDir = join(runpath, 'server/mysql')
@@ -233,34 +231,34 @@ export default class Application extends EventEmitter {
     global.Server.MongoDBDir = join(runpath, 'server/mongodb')
     global.Server.FTPDir = join(runpath, 'server/ftp')
     global.Server.PostgreSqlDir = join(runpath, 'server/postgresql')
-    createFolder(global.Server.NginxDir)
-    createFolder(global.Server.PhpDir)
-    createFolder(global.Server.MysqlDir)
-    createFolder(global.Server.MariaDBDir)
-    createFolder(global.Server.ApacheDir)
-    createFolder(global.Server.MemcachedDir)
-    createFolder(global.Server.RedisDir)
-    createFolder(global.Server.MongoDBDir)
+    mkdirp(global.Server.NginxDir).then().catch()
+    mkdirp(global.Server.PhpDir).then().catch()
+    mkdirp(global.Server.MysqlDir).then().catch()
+    mkdirp(global.Server.MariaDBDir).then().catch()
+    mkdirp(global.Server.ApacheDir).then().catch()
+    mkdirp(global.Server.MemcachedDir).then().catch()
+    mkdirp(global.Server.RedisDir).then().catch()
+    mkdirp(global.Server.MongoDBDir).then().catch()
     global.Server.Cache = join(runpath, 'server/cache')
-    createFolder(global.Server.Cache)
+    mkdirp(global.Server.Cache).then().catch()
     global.Server.Static = __static
     global.Server.Password = this.configManager.getConfig('password')
     console.log('global.Server.Password: ', global.Server.Password)
 
     const httpdcong = join(global.Server.ApacheDir, 'common/conf/')
-    createFolder(httpdcong)
+    mkdirp(httpdcong).then().catch()
 
     const ngconf = join(global.Server.NginxDir, 'common/conf/nginx.conf')
     if (!existsSync(ngconf)) {
       compressing.zip
         .uncompress(join(__static, 'zip/nginx-common.zip'), global.Server.NginxDir)
         .then(() => {
-          readFileAsync(ngconf).then((content: string) => {
+          readFile(ngconf, 'utf-8').then((content: string) => {
             content = content
               .replace(/#PREFIX#/g, global.Server.NginxDir!)
               .replace('#VHostPath#', join(global.Server.BaseDir!, 'vhost/nginx'))
-            writeFileAsync(ngconf, content).then()
-            writeFileAsync(
+            writeFile(ngconf, content).then()
+            writeFile(
               join(global.Server.NginxDir!, 'common/conf/nginx.conf.default'),
               content
             ).then()

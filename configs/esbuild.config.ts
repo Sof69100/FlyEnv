@@ -12,10 +12,9 @@ const external = [
   'nodejieba',
   'os',
   'child_process',
-  'child-process-promise',
   'fs-extra',
   'dns2',
-  'ip',
+  'neoip',
   'tangerine',
   'lodash',
   'axios',
@@ -32,7 +31,6 @@ const external = [
   'serve-handler',
   'electron-updater',
   'js-yaml',
-  '@lzwme/get-physical-address',
   '@electron/remote',
   'atomically',
   'electron-log',
@@ -51,6 +49,7 @@ const dev: BuildOptions = {
   minify: false,
   bundle: true,
   external,
+  format: 'esm',
   plugins: [BuildPlugin()]
 }
 
@@ -61,6 +60,7 @@ const dist: BuildOptions = {
   minify: true,
   bundle: true,
   external,
+  format: 'esm',
   plugins: [BuildPlugin()],
   drop: ['debugger', 'console']
 }
@@ -72,6 +72,7 @@ const devFork: BuildOptions = {
   minify: false,
   bundle: true,
   external,
+  format: 'esm',
   plugins: []
 }
 
@@ -84,6 +85,7 @@ const distFork: BuildOptions = {
   minify: true,
   bundle: true,
   external,
+  format: 'esm',
   plugins: [],
   drop: ['debugger', 'console']
 }
@@ -95,6 +97,7 @@ const devDNSFork: BuildOptions = {
   minify: false,
   bundle: true,
   external: dnsExternal,
+  format: 'esm',
   plugins: []
 }
 
@@ -105,6 +108,7 @@ const distDNSFork: BuildOptions = {
   minify: true,
   bundle: true,
   external: dnsExternal,
+  format: 'esm',
   plugins: []
 }
 
@@ -115,6 +119,7 @@ const devHelper: BuildOptions = {
   minify: false,
   bundle: true,
   external: [],
+  format: 'esm',
   plugins: []
 }
 
@@ -126,6 +131,7 @@ const distHelper: BuildOptions = {
   bundle: true,
   external: [],
   plugins: [],
+  format: 'esm',
   drop: ['debugger', 'console']
 }
 

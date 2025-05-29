@@ -1,6 +1,10 @@
 const { join, resolve } = require('path')
 const { mkdirp, writeFile, readFile } = require('fs-extra')
-const { exec } = require('child-process-promise')
+const { exec } = require('child_process')
+const { promisify } = require('util')
+
+const execPromise = promisify(exec)
+
 /**
  * Handle the app store node-pty Python library linking issue
  * @param pack
@@ -13,7 +17,7 @@ exports.default = async function after(pack) {
     await mkdirp(toBinDir)
     const command = `cp ./* "${toBinDir}"`
     console.log('command: ', command)
-    await exec(command, {
+    await execPromise(command, {
       cwd: fromBinDir
     })
   }
@@ -24,7 +28,7 @@ exports.default = async function after(pack) {
     await mkdirp(toBinDir)
     const command = `cp ./* "${toBinDir}"`
     console.log('command: ', command)
-    await exec(command, {
+    await execPromise(command, {
       cwd: fromBinDir
     })
   }
@@ -34,7 +38,7 @@ exports.default = async function after(pack) {
   await mkdirp(toBinDir)
   let command = `cp ./* "${toBinDir}"`
   console.log('command: ', command)
-  await exec(command, {
+  await execPromise(command, {
     cwd: fromBinDir
   })
 
@@ -43,7 +47,7 @@ exports.default = async function after(pack) {
   await mkdirp(toBinDir)
   command = `cp ./* "${toBinDir}"`
   console.log('command: ', command)
-  await exec(command, {
+  await execPromise(command, {
     cwd: fromBinDir
   })
 

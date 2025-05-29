@@ -1,4 +1,7 @@
-import { exec } from 'child-process-promise'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+
+const execAsync = promisify(exec)
 
 export function waitTime(time: number) {
   return new Promise((resolve) => {
@@ -20,7 +23,7 @@ export function uuid(length = 32) {
 export async function dirChownFetch(dir: string) {
   let res: any
   try {
-    res = await exec(`ls -al "${dir}"`)
+    res = await execAsync(`ls -al "${dir}"`)
   } catch (e) {
     throw e
   }

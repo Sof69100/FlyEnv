@@ -31,8 +31,8 @@
   import { User } from '@element-plus/icons-vue'
   import ChooseSiteRoot from './Plant/chooseSiteRoot.vue'
   import SiteAccessIssues from './Plant/siteAccessIssues.vue'
+  import { shell } from '@/util/NodeFn'
 
-  const { shell } = require('@electron/remote')
   const openDir = (dir: string) => {
     shell.openPath(dir)
   }

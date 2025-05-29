@@ -40,7 +40,6 @@ const config: UserConfig = {
       'nodejieba',
       'os',
       'child_process',
-      'child-process-promise',
       'fs-extra',
       'node-forge'
     ]

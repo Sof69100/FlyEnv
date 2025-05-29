@@ -4,5 +4,6 @@
 --external:esbuild
 --external:consolidate
 --external:@vue/compiler-sfc
+--format=esm
 scripts/dev-runner.ts
 --outfile=electron/dev-runner.js

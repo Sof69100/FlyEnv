@@ -1,7 +1,7 @@
 import * as DNS2 from 'dns2'
 import { createServer, Packet } from 'dns2'
 import Helper from '../../fork/Helper'
-import { address } from 'ip'
+import { address } from 'neoip'
 
 const Tangerine = require('tangerine')
 

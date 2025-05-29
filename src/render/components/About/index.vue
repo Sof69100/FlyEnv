@@ -20,8 +20,7 @@
       <template v-if="lang === 'zh'">
         <el-row style="padding: 0 20px; margin-top: 30px">
           <el-col>
-            感谢使用FlyEnv. 使用中的任何问题和建议. 都可以加入社群进行讨论. 也可以提交 GitHub
-            Issues
+            感谢使用FlyEnv. 使用中的任何问题和建议. 都可以加入社群进行讨论. 也可以提交 GitHub Issues
           </el-col>
           <el-col style="margin-top: 12px">
             如果FlyEnv有帮助到你. 为了项目更好的发展, 烦请star和赞助. 感谢
@@ -86,8 +85,8 @@
       <div style="margin: 20px 20px 0">
         <span style="margin-right: 12px">{{ $t('feedback.anythingToSay') }}</span>
         <el-button type="primary" @click.stop="toFeedback">{{
-            $t('feedback.sendMessage')
-          }}</el-button>
+          $t('feedback.sendMessage')
+        }}</el-button>
       </div>
     </div>
   </el-card>
@@ -96,15 +95,14 @@
 <script>
   import { AppStore } from '@/store/app.ts'
   import { AsyncComponentShow } from '@/util/AsyncComponent.ts'
+  import { app, shell } from '@/util/NodeFn'
 
-  const { app, shell } = require('@electron/remote')
-  const version = app.getVersion()
   export default {
     name: 'MoTitleBar',
     props: {},
     data() {
       return {
-        version
+        version: ''
       }
     },
     computed: {
@@ -112,6 +110,11 @@
         const app = AppStore()
         return app.config.setup.lang
       }
+    },
+    created() {
+      app.getVersion().then((v) => {
+        this.version = v
+      })
     },
     unmounted() {
       console.log('about unmounted !!!')

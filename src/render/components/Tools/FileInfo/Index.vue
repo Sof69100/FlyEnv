@@ -61,9 +61,13 @@
   import { formatBytes } from '@shared/utils.ts'
   import moment from 'moment'
 
-  const { exec } = require('child-process-promise')
+  const { exec } = require('child_process')
   const { stat } = require('fs')
   const { dialog } = require('@electron/remote')
+
+  const { promisify } = require('util')
+
+  const execPromise = promisify(exec)
 
   export default {
     name: 'MoToolsFileInfo',
@@ -147,7 +151,7 @@
             this.info.mtime_str = moment(stats.mtimeMs).format()
           }
         })
-        exec(`md5 ${this.path}`)
+        execPromise(`md5 ${this.path}`)
           .then((res) => {
             console.log(res)
             this.info.md5 = res.stdout.split(' = ')[1]
@@ -156,7 +160,7 @@
           .catch(() => {
             this.info.md5 = ''
           })
-        exec(`shasum -a 1 ${this.path}`)
+        execPromise(`shasum -a 1 ${this.path}`)
           .then((res) => {
             console.log(res)
             this.info.sha1 = res.stdout.split(' ')[0]
@@ -165,7 +169,7 @@
           .catch(() => {
             this.info.sha1 = ''
           })
-        exec(`shasum -a 256 ${this.path}`)
+        execPromise(`shasum -a 256 ${this.path}`)
           .then((res) => {
             console.log(res)
             this.info.sha256 = res.stdout.split(' ')[0]

@@ -3,7 +3,7 @@ import type { ServerResponse } from 'http'
 
 const ServeHandler = require('serve-handler')
 const Http = require('http')
-const IP = require('ip')
+const IP = require('neoip')
 
 class HttpServer {
   httpServes: { [k: string]: StaticHttpServe } = {}

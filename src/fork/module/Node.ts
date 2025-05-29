@@ -12,14 +12,13 @@ import {
 import { ForkPromise } from '@shared/ForkPromise'
 import { basename, dirname, join } from 'path'
 import { compareVersions } from 'compare-versions'
-import { exec } from 'child-process-promise'
 import { createWriteStream, existsSync } from 'fs'
 import { chmod, copyFile, unlink, readdir, writeFile, realpath, remove, mkdirp } from 'fs-extra'
 import axios from 'axios'
 import type { SoftInstalled } from '@shared/app'
 import TaskQueue from '../TaskQueue'
 import ncu from 'npm-check-updates'
-import EnvSync from '../util/EnvSync'
+
 class Manager extends Base {
   constructor() {
     super()
@@ -94,10 +93,7 @@ class Manager extends Base {
         command = 'unset PREFIX;[ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh";nvm ls'
       }
       try {
-        const env = await EnvSync.sync()
-        const res = await exec(command, {
-          env
-        })
+        const res = await execPromise(command)
         const stdout = res?.stdout ?? ''
         let localVersions: Array<string> = []
         let current = ''
@@ -206,10 +202,7 @@ class Manager extends Base {
         command = `unset PREFIX;export NVM_DIR="\${HOME}/.nvm";[ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh";nvm alias default ${select}`
       }
       try {
-        const env = await EnvSync.sync()
-        await exec(command, {
-          env
-        })
+        await execPromise(command)
         const { current }: any = await this.localVersion(tool)
         if (current === select) {
           await this.resetEnv(tool)
@@ -349,10 +342,7 @@ class Manager extends Base {
         command = `unset PREFIX;export NVM_DIR="\${HOME}/.nvm";[ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh";nvm ${action} ${version}`
       }
       try {
-        const env = await EnvSync.sync()
-        await exec(command, {
-          env
-        })
+        await execPromise(command)
         const { versions, current }: { versions: Array<string>; current: string } =
           (await this.localVersion(tool)) as any
         if (

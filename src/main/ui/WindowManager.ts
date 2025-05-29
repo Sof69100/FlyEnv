@@ -4,8 +4,7 @@ import pageConfig from '../configs/page'
 import { debounce } from 'lodash'
 import Event = Electron.Main.Event
 import BrowserWindowConstructorOptions = Electron.BrowserWindowConstructorOptions
-
-const { initialize, enable } = require('@electron/remote/main')
+import { initialize, enable } from '@electron/remote/main'
 
 initialize()
 
@@ -15,8 +14,8 @@ const defaultBrowserOptions: BrowserWindowConstructorOptions = {
   width: 1200,
   height: 800,
   webPreferences: {
-    nodeIntegration: true,
-    contextIsolation: false,
+    nodeIntegration: false,
+    contextIsolation: true,
     webSecurity: false,
     webviewTag: true
   }
@@ -33,8 +32,8 @@ const trayBrowserOptions: BrowserWindowConstructorOptions = {
   opacity: 0,
   transparent: true,
   webPreferences: {
-    nodeIntegration: true,
-    contextIsolation: false,
+    nodeIntegration: false,
+    contextIsolation: true,
     webSecurity: false
   }
 }
