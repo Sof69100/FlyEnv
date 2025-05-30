@@ -14,8 +14,7 @@
   import { computed, ref } from 'vue'
   import Conf from '@/components/Conf/index.vue'
   import { AppStore } from '@/store/app'
-
-  const { join } = require('path')
+  import { join } from 'path-browserify'
 
   const props = defineProps<{
     fileName: string

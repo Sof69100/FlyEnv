@@ -210,9 +210,7 @@
   import { SetupStore } from '@/components/Setup/store'
   import Router from '@/router'
   import { AppStore } from '@/store/app'
-
-  const { dialog } = require('@electron/remote')
-  const { readFile } = require('fs-extra')
+  import { dialog, fs } from '@/util/NodeFn'
 
   const { show, onClosed, onSubmit, closedFn, callback } = AsyncComponentSetup()
 
@@ -284,7 +282,7 @@
           return
         }
         const file = filePaths[0]
-        readFile(file, 'utf-8').then((svg: string) => {
+        fs.readFile(file, 'utf-8').then((svg: string) => {
           const config = {
             removeTags: true,
             removingTags: ['p-id', 'id', 'class', 'title', 'desc', 'defs', 'style'],

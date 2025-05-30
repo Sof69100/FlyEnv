@@ -76,7 +76,7 @@
   import { I18nT } from '@lang/index'
   import type { FtpItem } from './ftp'
   import { FtpStore } from './ftp'
-  import { uuid } from '@shared/utils'
+  import { uuid } from '@/util/Index'
   import { AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
   import { MessageError, MessageSuccess } from '@/util/Element'

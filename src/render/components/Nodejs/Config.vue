@@ -22,8 +22,7 @@
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash'
   import { uuid } from '@/util/Index'
-
-  const { join } = require('path')
+  import { join } from 'path-browserify'
 
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const conf = ref()

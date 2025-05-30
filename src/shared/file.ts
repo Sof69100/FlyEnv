@@ -1,21 +1,21 @@
-const fs = require('fs')
-const path = require('path')
-const { existsSync, readdir, appendFile } = require('fs-extra')
+import { statSync, readdirSync, chmodSync, mkdirSync, writeFile, readFile } from 'fs'
+import { existsSync, readdir, appendFile } from 'fs-extra'
+import { join } from 'path'
 
 export function getAllFile(fp: string, fullpath = true) {
   let arr: Array<string> = []
-  if (!fs.existsSync(fp)) {
+  if (!existsSync(fp)) {
     return arr
   }
-  const state = fs.statSync(fp)
+  const state = statSync(fp)
   if (state.isFile()) {
     return [fp]
   }
-  const files = fs.readdirSync(fp)
+  const files = readdirSync(fp)
   files.forEach(function (item: string) {
-    const fPath = path.join(fp, item)
-    if (fs.existsSync(fPath)) {
-      const stat = fs.statSync(fPath)
+    const fPath = join(fp, item)
+    if (existsSync(fPath)) {
+      const stat = statSync(fPath)
       if (stat.isDirectory()) {
         const sub = getAllFile(fPath, fullpath)
         arr = arr.concat(sub)
@@ -41,7 +41,7 @@ export const getAllFileAsync = async (
   for (const file of files) {
     const arr = [...basePath]
     arr.push(file.name)
-    const childPath = path.join(dirPath, file.name)
+    const childPath = join(dirPath, file.name)
     if (file.isDirectory()) {
       const sub = await getAllFileAsync(childPath, fullpath, arr)
       list.push(...sub)
@@ -55,17 +55,17 @@ export const getAllFileAsync = async (
 
 export function getSubDir(fp: string, fullpath = true) {
   const arr: Array<string> = []
-  if (!fs.existsSync(fp)) {
+  if (!existsSync(fp)) {
     return arr
   }
-  const stat = fs.statSync(fp)
+  const stat = statSync(fp)
   if (stat.isDirectory() && !stat.isSymbolicLink()) {
     try {
-      const files = fs.readdirSync(fp)
+      const files = readdirSync(fp)
       files.forEach(function (item: string) {
-        const fPath = path.join(fp, item)
-        if (fs.existsSync(fPath)) {
-          const stat = fs.statSync(fPath)
+        const fPath = join(fp, item)
+        if (existsSync(fPath)) {
+          const stat = statSync(fPath)
           if (stat.isDirectory() && !stat.isSymbolicLink()) {
             arr.push(fullpath ? fPath : item)
           }
@@ -79,15 +79,15 @@ export function getSubDir(fp: string, fullpath = true) {
 }
 
 export function chmod(fp: string, mode: string) {
-  if (fs.statSync(fp).isFile()) {
-    fs.chmodSync(fp, mode)
+  if (statSync(fp).isFile()) {
+    chmodSync(fp, mode)
     return
   }
-  const files = fs.readdirSync(fp)
+  const files = readdirSync(fp)
   files.forEach(function (item: string) {
-    const fPath = path.join(fp, item)
-    fs.chmodSync(fPath, mode)
-    const stat = fs.statSync(fPath)
+    const fPath = join(fp, item)
+    chmodSync(fPath, mode)
+    const stat = statSync(fPath)
     if (stat.isDirectory() === true) {
       chmod(fPath, mode)
     }
@@ -96,23 +96,23 @@ export function chmod(fp: string, mode: string) {
 
 export function createFolder(fp: string) {
   fp = fp.replace(/\\/g, '/')
-  if (fs.existsSync(fp)) {
+  if (existsSync(fp)) {
     return true
   }
   const arr = fp.split('/')
   let dir = '/'
   for (const p of arr) {
-    dir = path.join(dir, p)
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir)
+    dir = join(dir, p)
+    if (!existsSync(dir)) {
+      mkdirSync(dir)
     }
   }
-  return fs.existsSync(fp)
+  return existsSync(fp)
 }
 
 export function writeFileAsync(fp: string, content: string) {
   return new Promise((resolve, reject) => {
-    fs.writeFile(fp, content, (err: Error) => {
+    writeFile(fp, content, (err: Error) => {
       if (err) {
         reject(err)
       } else {
@@ -124,10 +124,10 @@ export function writeFileAsync(fp: string, content: string) {
 
 export function readFileAsync(fp: string, encode = 'utf-8') {
   return new Promise<string>((resolve, reject) => {
-    if (!fs.existsSync(fp)) {
+    if (!existsSync(fp)) {
       reject(new Error(`File does not exist: ${fp}`))
     }
-    fs.readFile(fp, encode, (err: Error, data: string) => {
+    readFile(fp, encode as any, (err: Error, data: string) => {
       if (err) {
         reject(err)
       } else {
@@ -139,7 +139,9 @@ export function readFileAsync(fp: string, encode = 'utf-8') {
 
 export async function appDebugLog(flag: string, info: string) {
   try {
-    const debugFile = path.join(global.Server.BaseDir!, 'debug.log')
+    const debugFile = join(global.Server.BaseDir!, 'debug.log')
     await appendFile(debugFile, `${flag}: ${info}\n`)
-  } catch (e) {}
+  } catch {
+    /* empty */
+  }
 }

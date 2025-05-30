@@ -5,9 +5,8 @@ import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
 import { NodejsStore } from '@/components/Nodejs/node'
 import { AppStore } from '@/store/app'
-
-const { dirname, join } = require('path')
-const { writeFile, chmod, remove } = require('fs-extra')
+import { dirname, join } from 'path-browserify'
+import { fs } from '@/util/NodeFn'
 
 export const NVMSetup = reactive<{
   installed: boolean
@@ -190,15 +189,15 @@ ${params.join('\n')}`
     console.log('content: ', content)
 
     const file = join(window.Server.Cache!, `nvm-install.sh`)
-    await writeFile(file, content)
-    await chmod(file, '0777')
+    await fs.writeFile(file, content)
+    await fs.chmod(file, '0777')
     await nextTick()
     const execXTerm = new XTerm()
     NVMSetup.xterm = execXTerm
     await execXTerm.mount(xtermDom.value!)
     await execXTerm.send([`cd "${dirname(file)}"`, `./nvm-install.sh`])
     NVMSetup.installEnd = true
-    await remove(file)
+    await fs.remove(file)
     store.chekTool()?.then()?.catch()
   }
 
@@ -214,7 +213,7 @@ ${params.join('\n')}`
   })
 
   onUnmounted(() => {
-    NVMSetup.xterm && NVMSetup.xterm.unmounted()
+    NVMSetup?.xterm?.unmounted()
   })
 
   fetchLocal()

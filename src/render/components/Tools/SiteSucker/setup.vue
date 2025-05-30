@@ -27,7 +27,7 @@
                     type="text"
                     class="input"
                     :placeholder="$t('util.saveAs')"
-                    readonly=""
+                    readonly="true"
                     :value="form.dir"
                   />
                   <div class="icon-block" @click="chooseRoot()">
@@ -121,11 +121,10 @@
   import { ref } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { SiteSuckerStore } from '@/components/Tools/SiteSucker/store'
+  import { dialog } from '@/util/NodeFn'
 
-  const { dialog } = require('@electron/remote')
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
-  const os = require('os')
-  const CPU_Count = os.cpus().length
+  const CPU_Count = 8
 
   const form = ref({
     dir: '',

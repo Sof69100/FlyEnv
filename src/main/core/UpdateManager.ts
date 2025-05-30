@@ -6,6 +6,9 @@ import { resolve } from 'path'
 import logger from './Logger'
 import { I18nT } from '@lang/index'
 import type { AppUpdater } from 'electron-updater/out/AppUpdater'
+import { fileURLToPath } from 'node:url'
+import { dirname } from 'node:path'
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 if (is.dev()) {
   autoUpdater.updateConfigPath = resolve(__dirname, '../../app-update.yml')

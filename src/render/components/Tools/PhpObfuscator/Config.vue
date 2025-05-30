@@ -24,13 +24,11 @@
 
 <script lang="ts">
   import { defineComponent, nextTick } from 'vue'
-  import { readFileAsync, writeFileAsync } from '@shared/file'
   import { EditorConfigMake, EditorCreate } from '@/util/Editor'
   import { MessageError, MessageSuccess } from '@/util/Element'
+  import { join } from 'path-browserify'
+  import { dialog, fs } from '@/util/NodeFn'
 
-  const { join } = require('path')
-  const { dialog } = require('@electron/remote')
-  const { statSync, readFileSync } = require('fs')
   let config = ''
   export default defineComponent({
     components: {},
@@ -51,16 +49,23 @@
     created: function () {},
     mounted() {
       if (!config) {
-        const file = join(window.Server.Static, 'tmpl/yakpro-po.default.cnf')
-        config = readFileSync(file, 'utf-8')
+        const file = join(window.Server.Static!, 'tmpl/yakpro-po.default.cnf')
+        fs.readFile(file, 'utf-8').then((c) => {
+          config = c
+          this.config = this.customConfig || config
+          nextTick().then(() => {
+            this.initEditor()
+          })
+        })
+      } else {
+        this.config = this.customConfig || config
+        nextTick().then(() => {
+          this.initEditor()
+        })
       }
-      this.config = this.customConfig || config
-      nextTick().then(() => {
-        this.initEditor()
-      })
     },
     unmounted() {
-      this.monacoInstance && this.monacoInstance.dispose()
+      this?.monacoInstance?.dispose()
       this.monacoInstance = null
     },
     methods: {
@@ -80,17 +85,17 @@
           .showOpenDialog({
             properties: opt
           })
-          .then(({ canceled, filePaths }: any) => {
+          .then(async ({ canceled, filePaths }: any) => {
             if (canceled || filePaths.length === 0) {
               return
             }
             const file = filePaths[0]
-            const state = statSync(file)
+            const state = await fs.stat(file)
             if (state.size > 5 * 1024 * 1024) {
               MessageError(this.$t('base.fileBigErr'))
               return
             }
-            readFileAsync(file).then((conf) => {
+            fs.readFile(file, 'utf-8').then((conf) => {
               this.config = conf
               this.initEditor()
             })
@@ -113,7 +118,7 @@
               return
             }
             const content = this.monacoInstance.getValue()
-            writeFileAsync(filePath, content).then(() => {
+            fs.writeFile(filePath, content).then(() => {
               MessageSuccess(this.$t('base.success'))
             })
           })

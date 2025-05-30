@@ -55,8 +55,10 @@ export default defineConfig([
         ecmaFeatures: {
           jsx: true,
         },
+        project: true
       },
       globals: {
+        import: 'readonly', // 允许 import.meta
         ...globals.browser
       }
     },
@@ -84,7 +86,7 @@ export default defineConfig([
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/ban-types': 'off',
-
+      '@typescript-eslint/no-import-type-side-effects': 'off', // 允许 import.meta.url
       // TypeScript unused vars (disable base ESLint one, use TS version)
       '@typescript-eslint/no-unused-vars': [
         'error',

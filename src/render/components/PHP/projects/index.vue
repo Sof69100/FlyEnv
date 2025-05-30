@@ -190,9 +190,8 @@
   import { SetupStore } from '@/components/Setup/store'
   import Router from '@/router'
   import { AppStore } from '@/store/app'
-
-  const { shell } = require('@electron/remote')
-  const { join } = require('path')
+  import { join } from 'path-browserify'
+  import { shell } from '@/util/NodeFn'
 
   const props = defineProps<{
     typeFlag: AllAppModule

@@ -41,8 +41,8 @@
   import IPC from '@/util/IPC'
   import { MessageError, MessageSuccess } from '@/util/Element'
   import Base from '@/core/Base'
+  import { fs } from '@/util/NodeFn'
 
-  const { readFile, existsSync } = require('fs-extra')
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 
   const props = defineProps<{
@@ -75,12 +75,13 @@
   }
 
   const fetchContent = async () => {
-    if (!existsSync(props.file)) {
+    const exists = await fs.existsSync(props.file)
+    if (!exists) {
       content.value = I18nT('util.toolFileNotExist')
       disabled.value = true
       return
     }
-    content.value = await readFile(props.file, 'utf-8')
+    content.value = await fs.readFile(props.file, 'utf-8')
     initEditor()
   }
 
@@ -116,7 +117,7 @@
   })
 
   onUnmounted(() => {
-    monacoInstance && monacoInstance.dispose()
+    monacoInstance?.dispose?.()
     monacoInstance = null
   })
 

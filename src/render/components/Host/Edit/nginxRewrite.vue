@@ -73,7 +73,6 @@
 
 <script lang="ts" setup>
   import { computed, nextTick, ref, watch, onMounted, onUnmounted } from 'vue'
-  import { readFileAsync } from '@shared/file'
   import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js'
   import { I18nT } from '@lang/index'
   import { EditorConfigMake, EditorCreate } from '@/util/Editor'
@@ -199,7 +198,7 @@
     if (HostNginxRewriteSetup.nginxRewriteCustom[file]) {
       const item = HostNginxRewriteSetup.nginxRewriteCustom[file]
       if (!item.content) {
-        readFileAsync(file).then((content) => {
+        fs.readFile(file, 'utf-8').then((content) => {
           item.content = content
           emits('update:modelValue', content)
           monacoInstance?.setValue(content)
@@ -214,7 +213,7 @@
     if (HostNginxRewriteSetup.nginxRewriteDefault[file]) {
       const item = HostNginxRewriteSetup.nginxRewriteDefault[file]
       if (!item.content) {
-        readFileAsync(file).then((content) => {
+        fs.readFile(file, 'utf-8').then((content) => {
           item.content = content
           emits('update:modelValue', content)
           monacoInstance?.setValue(content)

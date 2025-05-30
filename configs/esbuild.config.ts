@@ -50,6 +50,7 @@ const dev: BuildOptions = {
   bundle: true,
   external,
   format: 'esm',
+  target: 'esnext',
   plugins: [BuildPlugin()]
 }
 
@@ -61,6 +62,7 @@ const dist: BuildOptions = {
   bundle: true,
   external,
   format: 'esm',
+  target: 'esnext',
   plugins: [BuildPlugin()],
   drop: ['debugger', 'console']
 }
@@ -73,6 +75,7 @@ const devFork: BuildOptions = {
   bundle: true,
   external,
   format: 'esm',
+  target: 'esnext',
   plugins: []
 }
 
@@ -86,6 +89,7 @@ const distFork: BuildOptions = {
   bundle: true,
   external,
   format: 'esm',
+  target: 'esnext',
   plugins: [],
   drop: ['debugger', 'console']
 }
@@ -98,6 +102,7 @@ const devDNSFork: BuildOptions = {
   bundle: true,
   external: dnsExternal,
   format: 'esm',
+  target: 'esnext',
   plugins: []
 }
 
@@ -109,6 +114,7 @@ const distDNSFork: BuildOptions = {
   bundle: true,
   external: dnsExternal,
   format: 'esm',
+  target: 'esnext',
   plugins: []
 }
 
@@ -120,6 +126,7 @@ const devHelper: BuildOptions = {
   bundle: true,
   external: [],
   format: 'esm',
+  target: 'esnext',
   plugins: []
 }
 
@@ -132,6 +139,7 @@ const distHelper: BuildOptions = {
   external: [],
   plugins: [],
   format: 'esm',
+  target: 'esnext',
   drop: ['debugger', 'console']
 }
 

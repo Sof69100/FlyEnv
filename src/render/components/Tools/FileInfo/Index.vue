@@ -58,16 +58,9 @@
 </template>
 
 <script>
-  import { formatBytes } from '@shared/utils.ts'
-  import moment from 'moment'
-
-  const { exec } = require('child_process')
-  const { stat } = require('fs')
-  const { dialog } = require('@electron/remote')
-
-  const { promisify } = require('util')
-
-  const execPromise = promisify(exec)
+  import { formatBytes } from '@/util/Index.ts'
+  import { formatISO } from 'date-fns'
+  import { dialog, fs, exec } from '@/util/NodeFn'
 
   export default {
     name: 'MoToolsFileInfo',
@@ -135,23 +128,20 @@
           })
       },
       getInfo() {
-        stat(this.path, (err, stats) => {
-          console.log(err)
-          console.log(stats)
-          if (!err) {
-            this.info.size = stats.size
-            this.info.size_str = formatBytes(stats.size)
-            this.info.atime = stats.atimeMs
-            this.info.atime_str = moment(stats.atimeMs).format()
-            this.info.btime = stats.birthtimeMs
-            this.info.btime_str = moment(stats.birthtimeMs).format()
-            this.info.ctime = stats.ctimeMs
-            this.info.ctime_str = moment(stats.ctimeMs).format()
-            this.info.mtime = stats.mtimeMs
-            this.info.mtime_str = moment(stats.mtimeMs).format()
-          }
+        fs.stat(this.path).then((stats) => {
+          this.info.size = stats.size
+          this.info.size_str = formatBytes(stats.size)
+          this.info.atime = stats.atimeMs
+          this.info.atime_str = formatISO(stats.atimeMs)
+          this.info.btime = stats.birthtimeMs
+          this.info.btime_str = formatISO(stats.birthtimeMs)
+          this.info.ctime = stats.ctimeMs
+          this.info.ctime_str = formatISO(stats.ctimeMs)
+          this.info.mtime = stats.mtimeMs
+          this.info.mtime_str = formatISO(stats.mtimeMs)
         })
-        execPromise(`md5 ${this.path}`)
+        exec
+          .exec(`md5 ${this.path}`)
           .then((res) => {
             console.log(res)
             this.info.md5 = res.stdout.split(' = ')[1]
@@ -160,7 +150,8 @@
           .catch(() => {
             this.info.md5 = ''
           })
-        execPromise(`shasum -a 1 ${this.path}`)
+        exec
+          .exec(`shasum -a 1 ${this.path}`)
           .then((res) => {
             console.log(res)
             this.info.sha1 = res.stdout.split(' ')[0]
@@ -169,7 +160,8 @@
           .catch(() => {
             this.info.sha1 = ''
           })
-        execPromise(`shasum -a 256 ${this.path}`)
+        exec
+          .exec(`shasum -a 256 ${this.path}`)
           .then((res) => {
             console.log(res)
             this.info.sha256 = res.stdout.split(' ')[0]

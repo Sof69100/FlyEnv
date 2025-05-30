@@ -66,7 +66,7 @@
   import { computed, ref, watch } from 'vue'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { I18nT } from '@lang/index'
-  import { uuid } from '@shared/utils'
+  import { uuid } from '@/util/Index'
   import { BrewStore } from '@/store/brew'
   import { MessageSuccess } from '@/util/Element'
   import type { MysqlGroupItem } from '@shared/app'

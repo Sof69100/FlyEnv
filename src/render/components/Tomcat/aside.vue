@@ -32,8 +32,7 @@
   import type { AllAppModule } from '@/core/type'
   import { TomcatSetup } from '@/components/Tomcat/setup'
   import type { SoftInstalled } from '@/store/brew'
-
-  const { join } = require('path')
+  import { join } from 'path-browserify'
 
   const {
     showItem,

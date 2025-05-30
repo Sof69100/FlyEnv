@@ -22,18 +22,17 @@
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash'
   import Common from '@/components/Conf/common.vue'
-  import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
-  const { existsSync } = require('fs-extra')
+  import { uuid } from '@/util/Index'
+  import { join } from 'path-browserify'
+  import { fs } from '@/util/NodeFn'
 
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const conf = ref()
   const file = computed(() => {
-    return join(window.Server.BaseDir, 'ollama/ollama.conf')
+    return join(window.Server.BaseDir!, 'ollama/ollama.conf')
   })
   const defaultFile = computed(() => {
-    return join(window.Server.BaseDir, 'ollama/ollama.conf.default')
+    return join(window.Server.BaseDir!, 'ollama/ollama.conf.default')
   })
 
   const names: CommonSetItem[] = [
@@ -227,7 +226,7 @@
 
   const onTypeChange = (type: 'default' | 'common', config: string) => {
     console.log('onTypeChange: ', type, config)
-    if (editConfig !== config || commonSetting.value.length === 0) {
+    if (editConfig !== config) {
       editConfig = config
       getCommonSetting()
     } else if (commonSetting.value.length === 0) {
@@ -235,10 +234,12 @@
     }
   }
 
-  if (!existsSync(file.value)) {
-    IPC.send('app-fork:ollama', 'initConfig').then((key: string) => {
-      IPC.off(key)
-      conf?.value?.update()
-    })
-  }
+  fs.existsSync(file.value).then((e) => {
+    if (!e) {
+      IPC.send('app-fork:ollama', 'initConfig').then((key: string) => {
+        IPC.off(key)
+        conf?.value?.update()
+      })
+    }
+  })
 </script>

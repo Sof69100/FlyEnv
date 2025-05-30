@@ -26,6 +26,9 @@ import ScreenManager from './core/ScreenManager'
 import AppLog from './core/AppLog'
 import compressing from 'compressing'
 import { mkdirp, readFile, writeFile } from 'fs-extra'
+import { fileURLToPath } from 'node:url'
+import { dirname } from 'node:path'
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default class Application extends EventEmitter {
   isReady: boolean

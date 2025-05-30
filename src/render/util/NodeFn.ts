@@ -57,7 +57,43 @@ export const clipboard = {
   writeText: createIPCCall<void>('clipboard', 'writeText')
 }
 
+export const nodeForge = {
+  rsaGenerateKeyPair: createIPCCall<{ privateKey: string; publicKey: string }>(
+    'node-forge',
+    'rsaGenerateKeyPair'
+  ),
+  privateKeyToPem: createIPCCall<string>('node-forge', 'privateKeyToPem'),
+  publicKeyToPem: createIPCCall<string>('node-forge', 'publicKeyToPem')
+}
+
+export const nativeTheme = {
+  updateFn: [] as any,
+  shouldUseDarkColors: createIPCCall<boolean>('nativeTheme', 'shouldUseDarkColors'),
+  on(flag: 'updated', _fn: () => void) {
+    if (flag === 'updated' && !this.updateFn.includes(_fn)) {
+      this.updateFn.push(_fn)
+    }
+  },
+  removeListener(flag: 'updated', _fn: () => void) {
+    if (flag === 'updated' && this.updateFn.includes(_fn)) {
+      const index = this.updateFn.indexOf(_fn)
+      if (index >= 0) {
+        this.updateFn.splice(index, 1)
+      }
+    }
+  }
+}
+
+IPC.on('App-Native-Theme-Update').then(() => {
+  nativeTheme.updateFn.forEach((fn: () => void) => {
+    fn()
+  })
+})
+
 export const app = {
+  getConfig: createIPCCall<any>('app', 'getConfig'),
+  setLoginItemSettings: createIPCCall<string>('app', 'setLoginItemSettings'),
+  getLoginItemSettings: createIPCCall<string>('app', 'getLoginItemSettings'),
   getVersion: createIPCCall<string>('app', 'getVersion')
 }
 
@@ -70,6 +106,10 @@ export const shell = {
   showItemInFolder: createIPCCall<void>('shell', 'showItemInFolder'),
   openPath: createIPCCall<string>('shell', 'openPath'),
   openExternal: createIPCCall<void>('shell', 'openExternal')
+}
+
+export const exec = {
+  exec: createIPCCall<any>('exec', 'exec')
 }
 
 export const fs = {

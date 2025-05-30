@@ -28,7 +28,7 @@
           <input
             type="text"
             :class="'input' + (errs['src'] ? ' error' : '')"
-            readonly="readonly"
+            readonly="true"
             :placeholder="$t('php.obfuscatorSrc')"
             :value="item.src"
           />
@@ -44,7 +44,7 @@
               error: errs['desc'],
               enable: descType !== ''
             }"
-            readonly="readonly"
+            readonly="true"
             :placeholder="$t('php.obfuscatorDesc')"
             :value="item.desc"
           />
@@ -82,10 +82,8 @@
   import Config from './Config.vue'
   import IPC from '@/util/IPC'
   import { MessageError, MessageSuccess } from '@/util/Element'
-
-  const { dialog, shell } = require('@electron/remote')
-  const { statSync } = require('fs')
-  const { join } = require('path')
+  import { join } from 'path-browserify'
+  import { dialog, shell, fs } from '@/util/NodeFn'
 
   let running = ref(false)
 
@@ -201,12 +199,12 @@
               }
             ]
           })
-          .then(({ canceled, filePaths }: any) => {
+          .then(async ({ canceled, filePaths }: any) => {
             if (canceled || filePaths.length === 0) {
               return
             }
             const [path] = filePaths
-            const state = statSync(path)
+            const state = await fs.stat(path)
             if (state.isDirectory()) {
               this.descType = 'dir'
             } else if (state.isFile()) {

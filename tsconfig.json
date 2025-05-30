@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ESNext",
+    "module": "ESNext",
     "useDefineForClassFields": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "strict": true,
     "jsx": "preserve",
     "jsxImportSource": "vue",
@@ -12,7 +12,8 @@
     "lib": ["esnext", "dom"],
     "sourceMap": false,
     "strictFunctionTypes": false,
-    "importsNotUsedAsValues": "error",
+    "verbatimModuleSyntax": false,
+    "importsNotUsedAsValues": "preserve",
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "isolatedModules": true,
@@ -29,24 +30,19 @@
       ],
       "@lang/*": [
         "src/lang/*"
-      ],
-      "@web/*": [
-        "web/*"
       ]
     }
   },
   "include": [
+    "configs/**/*.ts",
+    "configs/**/*.js",
+    "scripts/**/*.ts",
+    "scripts/**/*.js",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "src/**/*.jsx",
-    "src/**/*.js",
-    "web/**/*.ts",
-    "web/**/*.d.ts",
-    "web/**/*.tsx",
-    "web/**/*.vue",
-    "web/**/*.jsx",
-    "web/**/*.js"
+    "src/**/*.js"
   ]
 }

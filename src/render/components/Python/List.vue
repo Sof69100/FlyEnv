@@ -117,9 +117,8 @@
   import { FolderAdd } from '@element-plus/icons-vue'
   import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
   import { I18nT } from '@lang/index'
-
-  const { shell } = require('@electron/remote')
-  const { dirname } = require('path')
+  import { dirname } from 'path-browserify'
+  import { shell } from '@/util/NodeFn'
 
   if (!Service.python) {
     Service.python = {

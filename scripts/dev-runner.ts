@@ -1,7 +1,7 @@
 import { createServer } from 'vite'
 import { spawn, ChildProcess } from 'child_process'
 import { build } from 'esbuild'
-import _fs, { copySync } from 'fs-extra'
+import _fs from 'fs-extra'
 import _path from 'path'
 // @ts-ignore
 import _md5 from 'md5'
@@ -9,6 +9,11 @@ import _md5 from 'md5'
 import viteConfig from '../configs/vite.config'
 import esbuildConfig from '../configs/esbuild.config'
 import { DoFix } from './fix'
+import { fileURLToPath } from 'node:url'
+import { dirname } from 'node:path'
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
+const { copySync } = _fs
 
 let restart = false
 let electronProcess: ChildProcess | null

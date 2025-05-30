@@ -7,7 +7,6 @@ import { fileSelect } from '@/util/Index'
 import { useBase64 } from '@vueuse/core'
 import IPC from '@/util/IPC'
 import { AISetup } from '@/components/AI/setup'
-import { getAllFileAsync } from '@shared/file'
 import { fs } from '@/util/NodeFn'
 
 export class AIOllama extends AIBase {
@@ -21,7 +20,7 @@ export class AIOllama extends AIBase {
         if (!dir || !exists) {
           continue
         }
-        getAllFileAsync(dir).then((files) => {
+        fs.readdir(dir).then((files) => {
           this._send({
             role: 'tool',
             name: tool.function.name,

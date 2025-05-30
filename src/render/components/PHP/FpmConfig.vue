@@ -32,9 +32,8 @@
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
   import { SoftInstalled } from '@/store/brew'
   import Conf from '@/components/Conf/drawer.vue'
-
-  const { existsSync, mkdirp, writeFile } = require('fs-extra')
-  const { join, dirname } = require('path')
+  import { join, dirname } from 'path-browserify'
+  import { fs } from '@/util/NodeFn'
 
   const props = defineProps<{
     item: SoftInstalled
@@ -69,10 +68,11 @@ slowlog = log/php-fpm-slow.log
   const conf = ref()
 
   const init = async () => {
-    if (!existsSync(file.value)) {
+    const exists = await fs.existsSync(file.value)
+    if (!exists) {
       const str = defaultConf.value
-      await mkdirp(dirname(file.value))
-      await writeFile(file.value, str)
+      await fs.mkdirp(dirname(file.value))
+      await fs.writeFile(file.value, str)
       conf?.value?.update()
       return
     }

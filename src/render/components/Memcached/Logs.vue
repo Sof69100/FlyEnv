@@ -11,12 +11,10 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue'
-
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
-
-  const { join } = require('path')
+  import { join } from 'path-browserify'
 
   const log = ref()
-  const filepath = ref(join(window.Server.MemcachedDir, 'logs/memcached.log'))
+  const filepath = ref(join(window.Server.MemcachedDir!, 'logs/memcached.log'))
 </script>

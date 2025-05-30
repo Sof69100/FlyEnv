@@ -9,11 +9,11 @@
       </li>
     </template>
     <template v-else>
-      <li v-for="(item, key) in service" :key="key" class="http-serve-item">
+      <li v-for="(item, _key) in service" :key="_key" class="http-serve-item">
         <div class="left">
           <div class="top">
             <span class="name"> {{ $t('base.path') }}:</span>
-            <span class="value" @click.stop="openDir(key)">{{ key }} </span>
+            <span class="value" @click.stop="openDir(_key as any)">{{ _key }} </span>
           </div>
           <div class="bottom">
             <span class="name">{{ $t('base.links') }}:</span>
@@ -21,7 +21,7 @@
               <span class="url empty">{{ $t('base.none') }}</span>
             </template>
             <template v-else>
-              <template v-for="(url, index) in item.host" :key="_index">
+              <template v-for="(url, _index) in item.host" :key="_index">
                 <QrcodePopper :url="url">
                   <span class="url" @click="doJump(url)">{{ url }} </span>
                 </QrcodePopper>
@@ -31,13 +31,13 @@
         </div>
         <div class="right">
           <div v-if="item.run" class="status running">
-            <yb-icon :svg="import('@/svg/stop2.svg?raw')" @click.stop="doStop(key, item)" />
+            <yb-icon :svg="import('@/svg/stop2.svg?raw')" @click.stop="doStop(_key as any, item)" />
           </div>
           <div v-else class="status">
-            <yb-icon :svg="import('@/svg/play.svg?raw')" @click.stop="doRun(key, item)" />
+            <yb-icon :svg="import('@/svg/play.svg?raw')" @click.stop="doRun(_key as any, item)" />
           </div>
           <div class="del">
-            <yb-icon :svg="import('@/svg/delete.svg?raw')" @click.stop="doDel(key)" />
+            <yb-icon :svg="import('@/svg/delete.svg?raw')" @click.stop="doDel(_key as any)" />
           </div>
         </div>
       </li>
@@ -51,8 +51,8 @@
   import { AppStore } from '@/store/app'
   import { MessageError } from '@/util/Element'
   import QrcodePopper from '@/components/Host/Qrcode/Index.vue'
-  const { dialog, shell } = require('@electron/remote')
-  const { pathExistsSync, statSync } = require('fs-extra')
+  import { dialog, shell, fs } from '@/util/NodeFn'
+
   export default defineComponent({
     components: { QrcodePopper },
     props: {},
@@ -151,10 +151,11 @@
           false
         )
       },
-      addPath(path: string) {
-        if (!pathExistsSync(path)) return
-        const stat = statSync(path)
-        if (!stat.isDirectory()) {
+      async addPath(path: string) {
+        const exists = await fs.existsSync(path)
+        if (!exists) return
+        const stat = await fs.stat(path)
+        if (!stat.isDirectory) {
           MessageError(this.$t('base.needSelectDir'))
           return
         }

@@ -7,8 +7,7 @@ import { MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
 import IPC from '@/util/IPC'
 import { staticVersionDel } from '@/util/Version'
-
-const { clipboard } = require('@electron/remote')
+import { clipboard } from '@/util/NodeFn'
 
 export const StaticSetup = reactive<{
   fetching: Partial<Record<AllAppModule, boolean>>
@@ -100,13 +99,17 @@ export const Setup = (typeFlag: AllAppModule) => {
         (key: string, res: any) => {
           console.log('res: ', res)
           if (res?.code === 200) {
-            find && Object.assign(find, res.msg)
+            if (find) {
+              Object.assign(find, res.msg)
+            }
           } else if (res?.code === 0) {
             IPC.off(key)
             if (res?.data) {
               regetInstalled()
             }
-            find && (find.downing = false)
+            if (find) {
+              find.downing = false
+            }
           } else {
             IPC.off(key)
           }

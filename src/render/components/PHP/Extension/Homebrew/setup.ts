@@ -3,7 +3,6 @@ import { AppStore } from '@/store/app'
 import { SoftInstalled } from '@/store/brew'
 import XTerm from '@/util/XTerm'
 import IPC from '@/util/IPC'
-import { getAllFileAsync } from '@shared/file'
 import { MessageError, MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
 import Base from '@/core/Base'
@@ -110,7 +109,7 @@ export const Setup = (version: SoftInstalled) => {
     const extensionDir = ExtensionSetup.dir?.[version.bin] ?? ''
     const baseDir = row.libName.split('/').pop()
     const dir = join(window.Server.BrewCellar!, baseDir)
-    const allFile = await getAllFileAsync(dir)
+    const allFile = await fs.readdir(dir)
     const so = allFile.filter((f) => f.endsWith('.so')).pop()
     if (so) {
       const destSo = join(extensionDir, basename(so))

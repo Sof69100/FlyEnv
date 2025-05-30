@@ -1,13 +1,10 @@
 import { computed, reactive, ref, Ref } from 'vue'
 import { type SoftInstalled } from '@/store/brew'
 import { BrewSetup } from '@/components/PHP/Extension/Homebrew/setup'
-import { execAsync } from '@shared/utils'
-import { getAllFile } from '@shared/file'
 import { LoadedSetup } from '@/components/PHP/Extension/Loaded/setup'
 import { MacPortsSetup } from '@/components/PHP/Extension/Macports/setup'
-
-const { join } = require('path')
-const { shell } = require('@electron/remote')
+import { join } from 'path-browserify'
+import { shell, fs, exec } from '@/util/NodeFn'
 
 export const ExtensionSetup = reactive<{
   dir: Partial<Record<string, string>>
@@ -100,8 +97,8 @@ export const Setup = (version: SoftInstalled) => {
   })
 
   const fetchLocal = () => {
-    const fetchFile = (dir: string) => {
-      let all = getAllFile(dir, false)
+    const fetchFile = async (dir: string) => {
+      let all = await fs.readdir(dir, false)
       all = all.filter((s) => {
         return s.indexOf('.so') >= 0 || s.indexOf('.dar') >= 0
       })
@@ -112,7 +109,7 @@ export const Setup = (version: SoftInstalled) => {
     } else {
       if (version?.version) {
         const pkconfig = version?.phpConfig ?? join(version?.path, 'bin/php-config')
-        execAsync(pkconfig, ['--extension-dir']).then((res: string) => {
+        exec.exec(pkconfig, ['--extension-dir']).then((res: string) => {
           const dir = res
           ExtensionSetup.dir[version.bin] = dir
           fetchFile(dir)

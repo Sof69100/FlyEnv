@@ -70,9 +70,8 @@
   import { Edit, Delete, Plus } from '@element-plus/icons-vue'
   import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
   import type { SoftInstalled } from '@/store/brew'
-
-  const { shell, clipboard } = require('@electron/remote')
-  const { join, resolve } = require('path')
+  import { join, resolve } from 'path-browserify'
+  import { shell, clipboard } from '@/util/NodeFn'
 
   const props = defineProps<{
     item: SoftInstalled

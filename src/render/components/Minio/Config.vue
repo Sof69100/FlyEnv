@@ -23,7 +23,7 @@
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash'
   import Common from '@/components/Conf/common.vue'
-  import { uuid } from '@shared/utils'
+  import { uuid } from '@/util/Index'
   import { join } from 'path-browserify'
   import { fs } from '@/util/NodeFn'
 

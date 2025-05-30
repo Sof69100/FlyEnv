@@ -5,6 +5,7 @@ import { debounce } from 'lodash'
 import Event = Electron.Main.Event
 import BrowserWindowConstructorOptions = Electron.BrowserWindowConstructorOptions
 import { initialize, enable } from '@electron/remote/main'
+import { join } from 'path'
 
 initialize()
 
@@ -83,6 +84,7 @@ export default class WindowManager extends EventEmitter {
       return window
     }
     const pageOptions = this.getPageOptions(page)
+    trayBrowserOptions.webPreferences!.preload = join(global.Server.Static!, 'preload/preload.mjs')
     window = new BrowserWindow(trayBrowserOptions)
     enable(window.webContents)
     window.webContents.on('before-input-event', (event, input) => {
@@ -117,7 +119,10 @@ export default class WindowManager extends EventEmitter {
       window.focus()
       return window
     }
-
+    defaultBrowserOptions.webPreferences!.preload = join(
+      global.Server.Static!,
+      'preload/preload.mjs'
+    )
     window = new BrowserWindow({
       ...defaultBrowserOptions,
       ...pageOptions.attrs
@@ -281,6 +286,7 @@ export default class WindowManager extends EventEmitter {
   }
 
   handleAllWindowClosed() {
+    // @ts-ignore
     app.on('window-all-closed', (event: Event) => {
       event.preventDefault()
     })

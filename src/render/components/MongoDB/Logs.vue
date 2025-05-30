@@ -11,12 +11,10 @@
 
 <script lang="ts" setup>
   import { computed, ref } from 'vue'
-
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
   import { AppStore } from '@/store/app'
-
-  const { join } = require('path')
+  import { join } from 'path-browserify'
 
   const appStore = AppStore()
   const currentVersion = computed(() => {

@@ -48,8 +48,7 @@
   import { ElInput, ElButton, ElTooltip } from 'element-plus'
   import type { Column } from 'element-plus'
   import { MessageSuccess } from '@/util/Element'
-
-  const { clipboard } = require('@electron/remote')
+  import { clipboard } from '@/util/NodeFn'
 
   const {
     showInstall,

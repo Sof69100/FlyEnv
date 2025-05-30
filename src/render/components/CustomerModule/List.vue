@@ -122,8 +122,7 @@
   import { ModuleCustomerExecItem } from '@/core/ModuleCustomer'
   import { FolderAdd } from '@element-plus/icons-vue'
   import Base from '@/core/Base'
-
-  const { join } = require('path')
+  import { join } from 'path-browserify'
 
   const title = computed(() => {
     return AppCustomerModule.currentModule?.label ?? ''

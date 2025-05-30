@@ -6,13 +6,10 @@ import IPC from '@/util/IPC'
 import type { AllAppModule } from '@/core/type'
 import installedVersions from '@/util/InstalledVersions'
 import { brewInfo } from '@/util/Brew'
-import { chmod } from '@shared/file'
 import { MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
-
-const { clipboard } = require('@electron/remote')
-const { join, basename, dirname } = require('path')
-const { existsSync, unlinkSync, copyFileSync } = require('fs')
+import { join, basename, dirname } from 'path-browserify'
+import { clipboard, fs } from '@/util/NodeFn'
 
 export const BrewSetup = reactive<{
   installEnd: boolean
@@ -189,11 +186,12 @@ export const Setup = (typeFlag: AllAppModule) => {
     let params = []
     const sh = join(window.Server.Static!, 'sh/brew-cmd.sh')
     const copyfile = join(window.Server.Cache!, 'brew-cmd.sh')
-    if (existsSync(copyfile)) {
-      unlinkSync(copyfile)
+    const exists = await fs.existsSync(copyfile)
+    if (exists) {
+      await fs.remove(copyfile)
     }
-    copyFileSync(sh, copyfile)
-    chmod(copyfile, '0777')
+    await fs.copy(sh, copyfile)
+    await fs.chmod(copyfile, '0777')
     params = [`${copyfile} ${arch} ${fn} ${name};`]
     if (proxyStr?.value) {
       params.unshift(proxyStr?.value)
@@ -255,7 +253,7 @@ export const Setup = (typeFlag: AllAppModule) => {
         ? join(window.Server.Static!, 'sh/brew-install.sh')
         : join(window.Server.Static!, 'sh/brew-install-en.sh')
     const copyFile = join(window.Server.Cache!, basename(file))
-    copyFileSync(file, copyFile)
+    await fs.copy(file, copyFile)
     const execXTerm = new XTerm()
     BrewSetup.xterm = execXTerm
     console.log('xtermDom.value: ', xtermDom.value)
@@ -285,7 +283,7 @@ export const Setup = (typeFlag: AllAppModule) => {
   })
 
   onUnmounted(() => {
-    BrewSetup.xterm && BrewSetup.xterm.unmounted()
+    BrewSetup?.xterm?.unmounted?.()
   })
 
   return {

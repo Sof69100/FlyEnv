@@ -48,14 +48,12 @@
 </template>
 
 <script>
-  import { uuid } from '@shared/utils.ts'
+  import { uuid } from '@/util/Index.ts'
   import { MessageError } from '@/util/Element.ts'
+  import { join, basename } from 'path-browserify'
+  import { dialog, shell, fs, exec } from '@/util/NodeFn'
 
-  const { existsSync, writeFileSync } = require('fs')
-  const { execSync } = require('child_process')
-  const { join, basename } = require('path')
-  const { EOL } = require('os')
-  const { dialog, shell } = require('@electron/remote')
+  const EOL = '\n'
 
   export default {
     name: 'MoSslMake',
@@ -133,7 +131,7 @@
         }
         return true
       },
-      doSave() {
+      async doSave() {
         if (!this.checkItem()) {
           return
         }
@@ -156,12 +154,13 @@
         caFile = caFile.replace('.crt', '')
         caFileName = caFileName.replace('.crt', '')
         let opt = { cwd: this.item.savePath }
-        if (!existsSync(caFile + '.crt')) {
+        let exists = await fs.existsSync(caFile + '.crt')
+        if (!exists) {
           let command = `openssl genrsa -out ${caFileName}.key 2048;`
           command += `openssl req -new -key ${caFileName}.key -out ${caFileName}.csr -sha256 -subj "/CN=Dev Root CA ${caFileName}";`
           command += `echo "basicConstraints=CA:true" > ${caFileName}.cnf;`
           command += `openssl x509 -req -in ${caFileName}.csr -signkey ${caFileName}.key -out ${caFileName}.crt -extfile ${caFileName}.cnf -sha256 -days 3650;`
-          execSync(command, opt)
+          await exec.exec(command, opt)
         }
         let ext = `authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
@@ -173,12 +172,13 @@ subjectAltName=@alt_names
           ext += `DNS.${index + 1} = ${item}${EOL}`
         })
         ext += `IP.1 = 127.0.0.1${EOL}`
-        writeFileSync(join(this.item.savePath, `${saveName}.ext`), ext)
+        await fs.writeFile(join(this.item.savePath, `${saveName}.ext`), ext)
 
         let command = `openssl req -new -newkey rsa:2048 -nodes -keyout ${saveName}.key -out ${saveName}.csr -sha256 -subj "/CN=${saveName}";`
         command += `openssl x509 -req -in ${saveName}.csr -out ${saveName}.crt -extfile ${saveName}.ext -CA "${caFile}.crt" -CAkey "${caFile}.key" -CAcreateserial -sha256 -days 3650;`
-        execSync(command, opt)
-        if (existsSync(join(this.item.savePath, `${saveName}.crt`))) {
+        await exec.exec(command, opt)
+        exists = await fs.existsSync(join(this.item.savePath, `${saveName}.crt`))
+        if (exists) {
           this.$alert(this.$t('base.sslMakeAlert', { caFileName }), this.$t('base.prompt'), {
             confirmButtonText: this.$t('base.confirm'),
             callback: () => {

@@ -28,8 +28,7 @@
   import LogVM from '@/components/Log/index.vue'
   import ToolVM from '@/components/Log/tool.vue'
   import type { SoftInstalled } from '@/store/brew'
-
-  const { join } = require('path')
+  import { join } from 'path-browserify'
 
   const { show, onClosed, onSubmit, closedFn } = AsyncComponentSetup()
 

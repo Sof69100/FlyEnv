@@ -21,7 +21,7 @@
   import type { CommonSetItem } from '@/components/Conf/setup'
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash'
-  import { uuid } from '@shared/utils'
+  import { uuid } from '@/util/Index'
   import { join } from 'path-browserify'
 
   const conf = ref()

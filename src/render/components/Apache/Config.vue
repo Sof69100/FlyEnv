@@ -23,9 +23,8 @@
   import type { CommonSetItem } from '@/components/Conf/setup'
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash'
-  import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
+  import { uuid } from '@/util/Index'
+  import { join } from 'path-browserify'
 
   const conf = ref()
   const commonSetting: Ref<CommonSetItem[]> = ref([])
@@ -38,14 +37,14 @@
       return ''
     }
     const name = md5(version.value.bin!)
-    return join(window.Server.ApacheDir, `common/conf/${name}.conf`)
+    return join(window.Server.ApacheDir!, `common/conf/${name}.conf`)
   })
   const defaultFile = computed(() => {
     if (!version?.value || !version?.value?.bin) {
       return ''
     }
     const name = md5(version.value.bin!)
-    return join(window.Server.ApacheDir, `common/conf/${name}.default.conf`)
+    return join(window.Server.ApacheDir!, `common/conf/${name}.default.conf`)
   })
 
   const names: CommonSetItem[] = [

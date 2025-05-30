@@ -6,8 +6,7 @@ import { I18nT } from '@lang/index'
 import { MessageError } from '@/util/Element'
 import type { AllAppModule } from '@/core/type'
 import { reactive } from 'vue'
-
-const { existsSync } = require('fs')
+import { fs } from '@/util/NodeFn'
 
 let passPromptShow = false
 export const showPassPrompt = () => {
@@ -33,7 +32,7 @@ export const showPassPrompt = () => {
                 AppStore()
                   .initConfig()
                   .then(() => {
-                    done && done()
+                    done()
                     passPromptShow = false
                     resolve(true)
                   })
@@ -98,7 +97,7 @@ export function portInfo(flag: string): Promise<{ [key: string]: OnlineVersionIt
 export const fetchVerion = (
   typeFlag: AllAppModule
 ): Promise<{ [key: string]: OnlineVersionItem }> => {
-  return new Promise((resolve) => {
+  return new Promise(async (resolve) => {
     let saved: any = localStorage.getItem(`fetchVerion-${typeFlag}`)
     if (saved) {
       saved = JSON.parse(saved)
@@ -107,8 +106,8 @@ export const fetchVerion = (
         const list: { [key: string]: OnlineVersionItem } = { ...saved.data }
         for (const k in list) {
           const item = list[k]
-          item.downloaded = existsSync(item.zip)
-          item.installed = existsSync(item.bin)
+          item.downloaded = await fs.existsSync(item.zip)
+          item.installed = await fs.existsSync(item.bin)
         }
         resolve(list)
         return

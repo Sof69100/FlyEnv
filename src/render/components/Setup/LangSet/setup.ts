@@ -1,8 +1,7 @@
 import { reactive } from 'vue'
 import { initCustomerLang, loadCustomerLang } from '@lang/loader'
-
-const { shell } = require('@electron/remote')
-const { resolve } = require('path')
+import { resolve } from 'path-browserify'
+import { shell } from '@/util/NodeFn'
 
 export const LangSetup = reactive({
   loading: false,

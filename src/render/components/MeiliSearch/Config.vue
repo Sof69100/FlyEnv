@@ -23,10 +23,9 @@
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash'
   import Common from '@/components/Conf/common.vue'
-  import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
-  const { existsSync } = require('fs-extra')
+  import { uuid } from '@/util/Index'
+  import { join } from 'path-browserify'
+  import { fs } from '@/util/NodeFn'
 
   const commonSetting: Ref<CommonSetItem[]> = ref([])
   const conf = ref()
@@ -35,13 +34,13 @@
     if (index.value < 0) {
       return ''
     }
-    return join(window.Server.BaseDir, 'meilisearch/meilisearch.toml')
+    return join(window.Server.BaseDir!, 'meilisearch/meilisearch.toml')
   })
   const defaultFile = computed(() => {
     if (index.value < 0) {
       return ''
     }
-    return join(window.Server.BaseDir, 'meilisearch/meilisearch.default.toml')
+    return join(window.Server.BaseDir!, 'meilisearch/meilisearch.default.toml')
   })
 
   const names: CommonSetItem[] = [
@@ -523,11 +522,13 @@
     }
   }
 
-  if (!existsSync(file.value)) {
-    IPC.send('app-fork:meilisearch', 'initConfig').then((key: string) => {
-      IPC.off(key)
-      index.value += 1
-      conf?.value?.update()
-    })
-  }
+  fs.existsSync(file.value).then((e) => {
+    if (!e) {
+      IPC.send('app-fork:meilisearch', 'initConfig').then((key: string) => {
+        IPC.off(key)
+        index.value += 1
+        conf?.value?.update()
+      })
+    }
+  })
 </script>

@@ -6,8 +6,7 @@ import { NodejsStore } from '@/components/Nodejs/node'
 import installedVersions from '@/util/InstalledVersions'
 import { BrewStore } from '@/store/brew'
 import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
-
-const { join } = require('path')
+import { join } from 'path-browserify'
 
 export const NodeDefaultSetup = reactive<{
   installing: Record<string, number>

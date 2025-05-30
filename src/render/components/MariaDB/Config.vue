@@ -22,9 +22,8 @@
   import { I18nT } from '@lang/index'
   import { debounce } from 'lodash'
   import { AppStore } from '@/store/app'
-  import { uuid } from '@shared/utils'
-
-  const { join } = require('path')
+  import { uuid } from '@/util/Index'
+  import { join } from 'path-browserify'
 
   const appStore = AppStore()
   const conf = ref()

@@ -27,13 +27,12 @@
 </template>
 
 <script>
-  import { readFileAsync, writeFileAsync } from '@shared/file.ts'
   import { KeyCode, KeyMod } from 'monaco-editor/esm/vs/editor/editor.api.js'
   import { nextTick } from 'vue'
   import { VueExtend } from '@/core/VueExtend.ts'
   import { EditorConfigMake, EditorCreate } from '@/util/Editor.ts'
   import { MessageError, MessageSuccess } from '@/util/Element.ts'
-  import { shell } from '@/util/NodeFn.js'
+  import { shell, fs } from '@/util/NodeFn.js'
 
   export default {
     show(data) {
@@ -85,7 +84,7 @@
       },
       saveConfig() {
         const content = this.monacoInstance.getValue()
-        writeFileAsync(this.configpath, content)
+        fs.writeFile(this.configpath, content)
           .then(() => {
             MessageSuccess(this.$t('base.success'))
           })
@@ -94,7 +93,7 @@
           })
       },
       getConfig() {
-        readFileAsync(this.configpath)
+        fs.readFile(this.configpath, 'utf-8')
           .then((conf) => {
             this.config = conf
             this.initEditor()

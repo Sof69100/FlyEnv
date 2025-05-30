@@ -9,7 +9,7 @@
           <el-dropdown-menu>
             <template v-for="(item, _index) in tabs" :key="_index">
               <el-dropdown-item :disabled="true">
-                <div class="text-sm" :class="{ 'mt-2': index > 0 }">{{ item.label }}</div>
+                <div class="text-sm" :class="{ 'mt-2': _index > 0 }">{{ item.label }}</div>
               </el-dropdown-item>
               <template v-for="(label, value) in item.sub" :key="value">
                 <el-dropdown-item :command="value">{{ label }}</el-dropdown-item>
@@ -105,7 +105,6 @@
   import List from './ListTable.vue'
   import IPC from '@/util/IPC'
   import { AppStore } from '@/store/app'
-  import { readFileAsync, writeFileAsync } from '@shared/file'
   import { I18nT } from '@lang/index'
   import { AsyncComponentShow } from '@/util/AsyncComponent'
   import { More, ArrowDown, Lock } from '@element-plus/icons-vue'
@@ -269,7 +268,7 @@
         const nginxVPath = join(window.Server.BaseDir!, 'vhost/nginx')
         const apacheVPath = join(window.Server.BaseDir!, 'vhost/apache')
         const rewriteVPath = join(window.Server.BaseDir!, 'vhost/rewrite')
-        writeFileAsync(filePath, JSON.stringify(hosts.value)).then(() => {
+        fs.writeFile(filePath, JSON.stringify(hosts.value)).then(() => {
           const saveDir = dirname(filePath)
           hosts.value.forEach((h) => {
             const name = `${h.name}.conf`
@@ -310,7 +309,7 @@
           MessageError(I18nT('base.fileBigErr'))
           return
         }
-        readFileAsync(file).then((conf) => {
+        fs.readFile(file, 'utf-8').then(async (conf) => {
           let arr = []
           try {
             arr = JSON.parse(conf)
@@ -330,7 +329,7 @@
           arr = arr.map((a: any) => reactive(a))
           hosts.value.splice(0)
           hosts.value.push(...arr)
-          writeFileAsync(join(window.Server.BaseDir!, 'host.json'), conf)
+          await fs.writeFile(join(window.Server.BaseDir!, 'host.json'), conf)
           const baseDir = dirname(file)
           const nginxVPath = join(window.Server.BaseDir!, 'vhost/nginx')
           const apacheVPath = join(window.Server.BaseDir!, 'vhost/apache')

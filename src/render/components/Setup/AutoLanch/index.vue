@@ -18,8 +18,7 @@
 <script lang="ts" setup>
   import { computed } from 'vue'
   import { AppStore } from '@/store/app'
-
-  const { app } = require('@electron/remote')
+  import { app } from '@/util/NodeFn'
 
   const store = AppStore()
 
@@ -37,7 +36,7 @@
   })
 
   const sysnAutoLunach = () => {
-    const setting = app.getLoginItemSettings()
+    const setting: any = app.getLoginItemSettings()
     console.log('setting: ', setting)
     if (store.config.setup?.autoLaunch !== setting.openAtLogin) {
       store.config.setup.autoLaunch = setting.openAtLogin

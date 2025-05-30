@@ -40,7 +40,7 @@
   import Common from '@/components/Conf/common.vue'
   import type { CommonSetItem } from '@/components/Conf/setup'
   import { debounce } from 'lodash'
-  import { uuid } from '@shared/utils'
+  import { uuid } from '@/util/Index'
   import { join } from 'path-browserify'
   import { fs } from '@/util/NodeFn'
 

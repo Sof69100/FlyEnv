@@ -127,8 +127,9 @@
   import IPC from '@/util/IPC'
   import { MessageError } from '@/util/Element'
   import { I18nT } from '@lang/index'
-  const { extname } = require('path')
-  const { dialog } = require('@electron/remote')
+  import { extname } from 'path-browserify'
+  import { dialog } from '@/util/NodeFn'
+
   const emit = defineEmits(['doClose'])
   const data = computed(() => {
     return store.value

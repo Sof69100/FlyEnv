@@ -68,7 +68,7 @@
   import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
   import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api.js'
 
-  import TomlRules from '@shared/transform/TomlRules'
+  import TomlRules from '@/util/transform/TomlRules'
   import { AppStore } from '@/store/app'
   import JSONStore, { JSONStoreTab } from '@/components/Tools/Json/store'
   import type { TabPaneName } from 'element-plus'
@@ -76,17 +76,13 @@
   import { I18nT } from '@lang/index'
   import { Document } from '@element-plus/icons-vue'
   import { EditorCreate } from '@/util/Editor'
-
-  const { dialog, shell } = require('@electron/remote')
-  const { nativeTheme } = require('@electron/remote')
-  const { readFile, writeFile } = require('fs-extra')
+  import { dialog, shell, nativeTheme, fs } from '@/util/NodeFn'
 
   // Register custom language
   languages.register({ id: 'toml' })
   // Provide basic tokens for the custom language
   languages.setMonarchTokensProvider('toml', TomlRules as any)
 
-  const emit = defineEmits(['doClose'])
   const moveRef = ref()
   const fromRef = ref()
   const toRef = ref()
@@ -165,6 +161,10 @@
   let fromEditor: editor.IStandaloneCodeEditor | null
   let toEditor: editor.IStandaloneCodeEditor | null
 
+  const isDark = ref(false)
+  nativeTheme.shouldUseDarkColors().then((e) => {
+    isDark.value = e
+  })
   const EditorConfigMake = (value: string): editor.IStandaloneEditorConstructionOptions => {
     const appStore = AppStore()
     const editorConfig = appStore.editorConfig
@@ -172,7 +172,7 @@
     if (theme === 'auto') {
       let appTheme = appStore?.config?.setup?.theme ?? ''
       if (!appTheme || appTheme === 'system') {
-        appTheme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+        appTheme = isDark.value ? 'dark' : 'light'
       }
       if (appTheme === 'light') {
         theme = 'vs-light'
@@ -246,8 +246,8 @@
   maskDom.classList.add('app-move-mask')
 
   const mouseMove = (e: MouseEvent) => {
-    e?.stopPropagation && e?.stopPropagation()
-    e?.preventDefault && e?.preventDefault()
+    e?.stopPropagation?.()
+    e?.preventDefault?.()
     const left = e.clientX - wapperRect.left - 5
     leftStyle.value = {
       width: `${left}px`,
@@ -262,8 +262,8 @@
     localStorage.setItem('PWS-JSON-LeftStle', JSON.stringify(leftStyle.value))
   }
   const HandleMoveMouseDown = (e: MouseEvent) => {
-    e.stopPropagation && e.stopPropagation()
-    e.preventDefault && e.preventDefault()
+    e?.stopPropagation?.()
+    e?.preventDefault?.()
     handleMoving.value = true
     const mainDom: HTMLElement = mainRef.value as any
     wapperRect = mainDom.getBoundingClientRect()
@@ -304,7 +304,7 @@
           return
         }
         const [path] = filePaths
-        currentValue.value = await readFile(path, 'utf-8')
+        currentValue.value = await fs.readFile(path, 'utf-8')
         fromEditor?.setValue(currentValue.value)
       })
   }
@@ -320,7 +320,7 @@
           return
         }
         const content = toEditor?.getValue() ?? ''
-        await writeFile(filePath, content)
+        await fs.writeFile(filePath, content)
         MessageSuccess(I18nT('base.success'))
         shell.showItemInFolder(filePath)
       })
@@ -332,9 +332,9 @@
   })
 
   onUnmounted(() => {
-    fromEditor && fromEditor.dispose()
+    fromEditor?.dispose()
     fromEditor = null
-    toEditor && toEditor.dispose()
+    toEditor?.dispose()
     toEditor = null
   })
 
@@ -359,7 +359,4 @@
       })
     }
   )
-  const doClose = () => {
-    emit('doClose')
-  }
 </script>

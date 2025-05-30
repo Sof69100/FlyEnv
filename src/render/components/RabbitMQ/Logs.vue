@@ -15,9 +15,8 @@
   import ToolVM from '@/components/Log/tool.vue'
   import { AppStore } from '@/store/app'
   import { BrewStore } from '@/store/brew'
-
-  const { join } = require('path')
-  const { existsSync, readFile } = require('fs-extra')
+  import { join } from 'path-browserify'
+  import { fs } from '@/util/NodeFn'
 
   const appStore = AppStore()
   const brewStore = BrewStore()
@@ -40,13 +39,13 @@
       filepath.value = ''
       return
     }
-    const confFile = join(window.Server.BaseDir, 'rabbitmq', `rabbitmq-${v}.conf`)
-    if (!existsSync(confFile)) {
+    const confFile = join(window.Server.BaseDir!, 'rabbitmq', `rabbitmq-${v}.conf`)
+    if (!(await fs.existsSync(confFile))) {
       filepath.value = ''
       return
     }
-    const logDir = join(window.Server.BaseDir, 'rabbitmq', `log-${v}`)
-    const content = await readFile(confFile, 'utf-8')
+    const logDir = join(window.Server.BaseDir!, 'rabbitmq', `log-${v}`)
+    const content = await fs.readFile(confFile, 'utf-8')
     const name =
       content
         .split('\n')

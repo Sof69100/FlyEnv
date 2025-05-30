@@ -6,13 +6,10 @@ import IPC from '@/util/IPC'
 import type { AllAppModule } from '@/core/type'
 import installedVersions from '@/util/InstalledVersions'
 import { portInfo } from '@/util/Brew'
-import { chmod } from '@shared/file'
 import { MessageSuccess } from '@/util/Element'
 import { I18nT } from '@lang/index'
-
-const { clipboard } = require('@electron/remote')
-const { join } = require('path')
-const { existsSync, unlinkSync, readFileSync, writeFileSync } = require('fs')
+import { join } from 'path-browserify'
+import { clipboard, fs } from '@/util/NodeFn'
 
 export const MacPortsSetup = reactive<{
   installEnd: boolean
@@ -185,8 +182,9 @@ export const Setup = (typeFlag: AllAppModule) => {
     if (['php52', 'php53', 'php54', 'php55', 'php56'].includes(name) && fn === 'install') {
       const sh = join(window.Server.Static!, 'sh/port-cmd-user.sh')
       const copyfile = join(window.Server.Cache!, 'port-cmd-user.sh')
-      if (existsSync(copyfile)) {
-        unlinkSync(copyfile)
+      const exists = await fs.existsSync(copyfile)
+      if (exists) {
+        await fs.remove(copyfile)
       }
       const libs = names.join(' ')
       const arrs = [
@@ -202,27 +200,28 @@ export const Setup = (typeFlag: AllAppModule) => {
         )
       })
       arrs.unshift(`arch ${arch} sudo -S port -f deactivate libuuid`)
-      let content = readFileSync(sh, 'utf-8')
+      let content = await fs.readFile(sh, 'utf-8')
       content = content.replace('##CONTENT##', arrs.join('\n'))
-      writeFileSync(copyfile, content)
-      chmod(copyfile, '0777')
+      await fs.writeFile(copyfile, content)
+      await fs.chmod(copyfile, '0777')
       params = [`sudo -S "${copyfile}"`]
     } else {
       const sh = join(window.Server.Static!, 'sh/port-cmd.sh')
       const copyfile = join(window.Server.Cache!, 'port-cmd.sh')
-      if (existsSync(copyfile)) {
-        unlinkSync(copyfile)
+      const exists = await fs.existsSync(copyfile)
+      if (exists) {
+        await fs.remove(copyfile)
       }
       if (fn === 'uninstall') {
         fn = 'uninstall --follow-dependents'
       }
-      let content = readFileSync(sh, 'utf-8')
+      let content = await fs.readFile(sh, 'utf-8')
       content = content
         .replace(new RegExp('##ARCH##', 'g'), arch)
         .replace(new RegExp('##ACTION##', 'g'), fn)
         .replace(new RegExp('##NAME##', 'g'), names.join(' '))
-      writeFileSync(copyfile, content)
-      chmod(copyfile, '0777')
+      await fs.writeFile(copyfile, content)
+      await fs.chmod(copyfile, '0777')
       params = [`sudo -S "${copyfile}"`]
     }
     if (proxyStr?.value) {
@@ -294,7 +293,7 @@ export const Setup = (typeFlag: AllAppModule) => {
   })
 
   onUnmounted(() => {
-    MacPortsSetup.xterm && MacPortsSetup.xterm.unmounted()
+    MacPortsSetup?.xterm?.unmounted?.()
   })
 
   return {

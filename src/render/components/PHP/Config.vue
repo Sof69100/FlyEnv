@@ -41,7 +41,7 @@
   import { SoftInstalled } from '@/store/brew'
   import IPC from '@/util/IPC'
   import { AsyncComponentSetup } from '@/util/AsyncComponent'
-  import { uuid } from '@shared/utils'
+  import { uuid } from '@/util/Index'
   import { join } from 'path-browserify'
   import { fs } from '@/util/NodeFn'
 

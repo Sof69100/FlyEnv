@@ -2,7 +2,7 @@
   <div class="soft-index-panel main-right-panel">
     <el-radio-group v-model="tab" class="mt-3">
       <template v-for="(item, _index) in tabs" :key="_index">
-        <el-radio-button :label="item" :value="index"></el-radio-button>
+        <el-radio-button :label="item" :value="_index"></el-radio-button>
       </template>
     </el-radio-group>
     <div class="main-block">
@@ -29,6 +29,7 @@
         type-flag="tomcat"
         :has-static="true"
         :show-port-lib="false"
+        :show-brew-lib="true"
       ></Manager>
       <Config v-else-if="tab === 2" :file-name="'server.xml'"></Config>
       <Config v-else-if="tab === 3" :file-name="'web.xml'"></Config>
@@ -49,9 +50,8 @@
   import { BrewStore } from '@/store/brew'
   import { TomcatSetup } from '@/components/Tomcat/setup'
   import { chooseFolder } from '@/util/File'
-
-  const { join } = require('path')
-  const { shell } = require('@electron/remote')
+  import { join } from 'path-browserify'
+  import { shell } from '@/util/NodeFn'
 
   const { tab, checkVersion } = AppModuleSetup('tomcat')
   const tabs = [

@@ -7,8 +7,7 @@ import { StaticSetup } from '@/components/VersionManager/static/setup'
 import { AsyncComponentShow } from '@/util/AsyncComponent'
 import installedVersions from '@/util/InstalledVersions'
 import { LocalSetup } from '@/components/VersionManager/local/setup'
-
-const { shell } = require('@electron/remote')
+import { shell } from '@/util/NodeFn'
 
 export const SetupAll = (typeFlag: AllAppModule) => {
   const brewStore = BrewStore()

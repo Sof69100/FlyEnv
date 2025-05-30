@@ -227,8 +227,7 @@
   import EXT from '@/components/ServiceManager/EXT/index.vue'
   import { Setup } from '@/components/ServiceManager/setup'
   import { ServiceActionStore } from '@/components/ServiceManager/EXT/store'
-
-  const { shell } = require('@electron/remote')
+  import { shell } from '@/util/NodeFn'
 
   const {
     appStore,

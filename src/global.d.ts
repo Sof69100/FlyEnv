@@ -42,5 +42,12 @@ declare global {
   var __static: string
   // eslint-disable-next-line no-var
   var launcher: Launcher
+
+  interface Window {
+    FlyEnvNodeAPI: {
+      ipcSendToMain: (...args: any[]) => void
+      ipcReceiveFromMain: (callback: (event: any, ...args: any[]) => void) => void
+    }
+  }
 }
 export {}

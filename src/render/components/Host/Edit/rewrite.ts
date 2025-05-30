@@ -1,5 +1,4 @@
 import { reactive, markRaw } from 'vue'
-import { getAllFileAsync } from '@shared/file'
 import { join, basename } from 'path-browserify'
 import { DirWatcher, FileWatcher, fs } from '@/util/NodeFn'
 
@@ -49,7 +48,7 @@ export const HostNginxRewriteSetup: {
   initNginxRewrites() {
     if (Object.keys(HostNginxRewriteSetup.nginxRewriteDefault).length === 0) {
       const dir = join(window.Server.Static!, 'rewrite')
-      getAllFileAsync(dir, false).then((files) => {
+      fs.readdir(dir, false).then((files) => {
         files = files.sort()
         for (const file of files) {
           const name = file.replace('.conf', '')

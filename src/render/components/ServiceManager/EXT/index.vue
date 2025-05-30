@@ -50,8 +50,7 @@
   import { ServiceActionStore } from './store'
   import Extension from '@/components/ServiceManager/Pgsql/extension.vue'
   import { I18nT } from '@lang/index'
-
-  const { dirname, join } = require('path')
+  import { dirname, join } from 'path-browserify'
 
   const props = defineProps<{
     item: SoftInstalled
